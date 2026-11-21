@@ -1,0 +1,714 @@
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BOVISENSE — Tu ganado, en buenas manos</title>
+<style>
+:root{
+  --v:#0C3B24;--c:#F7F5EE;--b:#FFFFFF;--d:#D4AF37;
+  --t:#1B221E;--g:#67726C;--bd:#E6E2D8;--a:#C84B31;
+  --ok:#0E5A36;--ok-bg:#E3F2EA;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{background:#222825;display:flex;justify-content:center;min-height:100vh;color:var(--t)}
+.app{width:100%;max-width:430px;min-height:100vh;background:var(--c);position:relative;padding-bottom:92px}
+
+header{background:var(--v);color:var(--b);padding:16px 18px 20px;border-radius:0 0 24px 24px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.ico-ring{width:44px;height:44px;border-radius:50%;border:1.8px solid var(--d);display:flex;align-items:center;justify-content:center;background:rgba(212,175,55,.08);flex-shrink:0}
+.tit{font-size:20px;font-weight:900;color:var(--d);line-height:1.05}
+.sub{font-size:10.5px;color:#DCE6E0;margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.hdr-search-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:var(--b);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.profile-btn{width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.85);background:#264E3A;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.farm-caption{font-size:10px;color:#C8D8CF;text-align:right;margin-top:4px;cursor:pointer}
+.sbox{margin-top:12px;background:var(--b);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.sbox.hidden{display:none}
+.sbox input{border:none;outline:none;width:100%;font-size:14px;color:var(--t);background:transparent}
+
+.view{display:none;padding:16px}
+.view.active{display:block}
+
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:-6px;margin-bottom:14px}
+.mc{background:var(--b);border:1.5px solid var(--bd);border-radius:14px;padding:10px 5px;text-align:center;cursor:pointer}
+.mc.active-kpi{border-color:var(--v);background:#EEF5F1;transform:translateY(-2px)}
+.mc-ico{width:32px;height:24px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;color:var(--v);font-size:16px}
+.mc b{display:block;font-size:13px;color:var(--v);margin-bottom:2px}
+.mc span{display:block;font-size:10.5px;font-weight:600;color:var(--t);line-height:1.15}
+
+.filter-bar{display:none;align-items:center;justify-content:space-between;background:#E6EFEA;color:var(--v);padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:12px}
+.filter-bar.show{display:flex}
+.filter-bar button{background:var(--v);color:var(--b);border:none;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer}
+
+.st{font-size:15px;font-weight:800;color:var(--t);margin:10px 0;display:flex;align-items:center;justify-content:space-between}
+.st small{font-size:11px;font-weight:700;color:var(--v);cursor:pointer}
+
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.qb{background:var(--b);border:1px solid var(--bd);border-radius:14px;padding:12px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:var(--t);cursor:pointer;text-align:left}
+.qb-ico{width:24px;height:24px;border-radius:6px;background:#EEF3F0;color:var(--v);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+
+.card{background:var(--b);border:1px solid var(--bd);border-radius:16px;padding:12px;margin-bottom:12px;cursor:pointer}
+.ch{display:flex;gap:12px;align-items:flex-start}
+.av{width:104px;height:112px;border-radius:12px;background:#E8E4D8;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.av img{width:100%;height:100%;object-fit:cover}
+.av-cam{position:absolute;bottom:5px;right:5px;background:rgba(12,59,36,.88);color:#fff;font-size:11px;padding:3px 6px;border-radius:7px}
+.cinfo{flex:1;min-width:0}
+.crow-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.lbl-sm{font-size:10px;color:var(--g);font-weight:600}
+.code-big{font-size:20px;font-weight:900;color:var(--t);line-height:1.15}
+.badge-bov{background:var(--v);color:var(--b);font-size:9px;font-weight:800;letter-spacing:.6px;padding:4px 8px;border-radius:6px;text-transform:uppercase}
+.meta-line{font-size:12px;font-weight:700;color:var(--t);margin-top:4px}
+.kv-row{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;margin-top:4px}
+.kv-row span{color:var(--g)}
+.kv-row b{color:var(--t);font-weight:800}
+
+.hstrip{margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #DCE5DF}
+.hstrip-top{background:#E6EFEA;color:var(--v);padding:6px 10px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px}
+.hstrip-top.warn{background:#FDEAE5;color:var(--a)}
+.hstrip-bot{background:#F9F8F4;padding:7px 10px;font-size:11px;color:var(--t);display:flex;align-items:center;gap:6px}
+.rec-foot{margin-top:8px;padding-top:7px;border-top:1px solid #EFECE3;font-size:11px;font-weight:600;color:var(--g);display:flex;align-items:center;justify-content:space-between}
+
+.av-sm{width:64px;height:64px;border-radius:12px;font-size:28px}
+.pill{font-size:10px;font-weight:800;padding:3px 8px;border-radius:8px;background:var(--ok-bg);color:var(--ok);display:inline-block}
+.pill.rev{background:#FDEAE5;color:var(--a)}
+
+.res-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.back-link{background:none;border:none;color:var(--v);font-weight:800;font-size:13px;cursor:pointer}
+.edit-mini-btn{background:var(--b);border:1.5px solid var(--v);color:var(--v);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer}
+.hero-card{background:var(--b);border:1px solid var(--bd);border-radius:16px;padding:12px;display:flex;gap:12px;align-items:stretch;margin-bottom:12px}
+.hero-photo{width:126px;min-height:146px;border-radius:12px;background:#E8E4D8;overflow:hidden;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:42px;cursor:pointer}
+.hero-photo img{width:100%;height:100%;object-fit:cover}
+.hero-body{flex:1;min-width:0}
+.hero-sub-lbl{font-size:11px;color:var(--g);font-weight:600}
+.hero-code-row{display:flex;align-items:center;gap:7px;margin-top:2px;flex-wrap:wrap}
+.hero-code{font-size:22px;font-weight:900;color:var(--t);line-height:1.1}
+.hero-rows{margin-top:8px;display:flex;flex-direction:column;gap:5px;font-size:11.5px}
+.hero-r{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.hero-r span:first-child{color:var(--g)}
+.hero-r b{color:var(--t);font-weight:800}
+
+.info-2x2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.info-tile{background:var(--b);border:1px solid var(--bd);border-radius:14px;padding:11px 12px}
+.it-title{font-size:12.5px;font-weight:800;color:var(--t);margin-bottom:6px}
+.it-line{font-size:11.5px;color:var(--t);font-weight:600;margin-top:5px}
+
+.pill-tabs{display:grid;grid-template-columns:1.25fr 1.15fr .85fr;gap:8px;margin-bottom:12px}
+.ptab{background:var(--b);border:1px solid var(--bd);color:var(--t);border-radius:12px;padding:10px 8px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.ptab.active{background:var(--v);border-color:var(--v);color:var(--b)}
+
+.hist-table-wrap{background:var(--b);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.hist-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.hist-table th{background:var(--v);color:var(--b);padding:9px 10px;text-align:left;font-weight:700}
+.hist-table td{padding:9px 10px;border-bottom:1px solid #ECE8DD;color:var(--t)}
+.hist-table tr:last-child td{border-bottom:none}
+
+.box{background:var(--b);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
+.iform{background:#EFECE2;padding:12px;border-radius:12px;margin-bottom:12px;display:none}
+.iform.open{display:block}
+.fg{margin-bottom:10px}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--v);margin-bottom:4px}
+.fg input,.fg select{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--bd);font-size:13px;background:var(--b);color:var(--t)}
+.btn{width:100%;padding:12px;background:var(--v);color:var(--d);border:none;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;margin-top:6px}
+.btn2{width:100%;padding:11px;background:var(--b);color:var(--v);border:1.5px solid var(--v);border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;margin-top:6px}
+.btn-del{width:100%;padding:10px;background:#FDEAE5;color:var(--a);border:1px solid #F3C3B7;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer;margin-top:8px}
+
+table{width:100%;border-collapse:collapse;background:var(--b);font-size:12px;border-radius:10px;overflow:hidden}
+th{background:var(--v);color:var(--b);text-align:left;padding:8px}
+td{padding:8px;border-bottom:1px solid var(--bd)}
+
+nav{position:fixed;bottom:0;width:100%;max-width:430px;height:68px;background:var(--b);border-top:1px solid var(--bd);display:flex;justify-content:space-around;align-items:center;z-index:20}
+.ni{background:none;border:none;font-size:11px;color:var(--t);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-weight:600;min-width:56px}
+.ni.active{color:var(--v);font-weight:800;border-bottom:2.5px solid var(--v);padding-bottom:2px}
+.add-fab{width:52px;height:52px;border-radius:50%;background:var(--v);color:var(--b);font-size:28px;line-height:1;border:4px solid var(--c);margin-top:-24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="top">
+      <div class="logo">
+        <div class="ico-ring">🐂</div>
+        <div>
+          <div class="tit">BOVISENSE</div>
+          <div class="sub">Tu ganado, en buenas manos</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <button type="button" class="hdr-search-btn" id="btn-toggle-search">🔍</button>
+        <div>
+          <div class="profile-btn" id="btn-farm-top">👤</div>
+          <div class="farm-caption" id="btn-farm-lbl"><span id="fname">Hacienda El Progreso</span> ✏️</div>
+        </div>
+      </div>
+    </div>
+    <div class="sbox" id="main-sbox">
+      <span>🔍</span>
+      <input id="q" placeholder="Ingresa código o arete (ej. 1247) y presiona Enter...">
+    </div>
+  </header>
+
+  <div id="v-inicio" class="view active">
+    <div class="mgrid">
+      <div class="mc active-kpi" id="kpi-all"><div class="mc-ico">🐂</div><b id="s-tot">3</b><span>Total bovinos</span></div>
+      <div class="mc" id="kpi-Sano"><div class="mc-ico">🐄</div><b id="s-san">2</b><span>Sanos</span></div>
+      <div class="mc" id="kpi-Por-revisar"><div class="mc-ico">🛡️</div><b id="s-rev" style="color:var(--a)">1</b><span>Por revisar</span></div>
+      <div class="mc" id="kpi-pes"><div class="mc-ico">☀️</div><b id="s-pes">437 kg</b><span>Peso promedio</span></div>
+    </div>
+
+    <div class="filter-bar" id="filter-bar">
+      <span id="filter-label">Mostrando: Todos</span>
+      <button type="button" id="btn-clear-filter">Ver todos</button>
+    </div>
+
+    <div class="st">Accesos directos</div>
+    <div class="qgrid">
+      <button type="button" class="qb" data-nav="nuevo"><div class="qb-ico">+</div><span>Registro bovino</span></button>
+      <button type="button" class="qb" data-nav="sanidad"><div class="qb-ico">📅</div><span>Vacuna · Fiebre Aftosa</span></button>
+      <button type="button" class="qb" data-nav="sanidad"><div class="qb-ico">💉</div><span>Sanidad</span></button>
+      <button type="button" class="qb" data-nav="sanidad"><div class="qb-ico">🛡️</div><span>Desparasitación</span></button>
+      <button type="button" class="qb" data-nav="bovinos"><div class="qb-ico">🧬</div><span>Reproducción</span></button>
+      <button type="button" class="qb" data-nav="reportes"><div class="qb-ico">📊</div><span>Reportes</span></button>
+    </div>
+
+    <div class="st">Próximos controles <small id="link-inv">Inventario completo →</small></div>
+    <div id="list1"></div>
+  </div>
+
+  <div id="v-bovinos" class="view">
+    <div class="st">Inventario del Hato <small id="link-all-inv">Mostrar todos</small></div>
+    <div id="list2"></div>
+  </div>
+
+  <div id="v-ficha" class="view">
+    <div class="res-top-bar">
+      <button type="button" class="back-link" id="btn-back">← Volver al inicio</button>
+      <button type="button" class="edit-mini-btn" id="act-edit">✏️ Editar ficha</button>
+    </div>
+    <div id="ficha"></div>
+  </div>
+
+  <div id="v-nuevo" class="view">
+    <div class="st">Nuevo Bovino</div>
+    <div class="box">
+      <div class="fg"><label>Foto del animal</label><input id="nimg" type="file" accept="image/*" capture="environment"></div>
+      <div class="fg"><label>Código / Arete *</label><input id="ncod" placeholder="Ej. 1255 o B-1255"></div>
+      <div class="fg"><label>Raza</label><select id="nraz"><option>Nelore</option><option>Brahman</option><option>Gyr</option><option>Brangus</option></select></div>
+      <div class="fg"><label>Sexo</label><select id="nsex"><option>Hembra</option><option>Macho</option></select></div>
+      <div class="fg"><label>Fecha de Nacimiento</label><input id="nnac" placeholder="15/03/2023"></div>
+      <div class="fg"><label>Edad</label><input id="neda" placeholder="2 años, 7 meses"></div>
+      <div class="fg"><label>Peso Actual (kg) *</label><input id="npes" type="number" placeholder="380"></div>
+      <div class="fg"><label>Estado</label><select id="nest"><option>Sano</option><option>Por revisar</option></select></div>
+      <button type="button" class="btn" id="btn-save-cow">Guardar Bovino</button>
+    </div>
+  </div>
+
+  <div id="v-sanidad" class="view">
+    <div class="st">Calendario Sanitario</div>
+    <div class="box"><table><thead><tr><th>Arete</th><th>Control</th><th>Fecha</th></tr></thead><tbody id="san-tb"></tbody></table></div>
+  </div>
+
+  <div id="v-reportes" class="view">
+    <div class="st">Reportes del Hato</div>
+    <div class="box" id="rep-box"></div>
+    <button type="button" class="btn" id="btn-csv">📥 Descargar Excel (.CSV)</button>
+    <button type="button" class="btn2" id="btn-print">🖨️ Imprimir / PDF</button>
+  </div>
+
+  <nav>
+    <button type="button" class="ni active" id="n-inicio" data-nav="inicio"><span>🏠</span>Inicio</button>
+    <button type="button" class="ni" id="n-bovinos" data-nav="bovinos"><span>🐄</span>Bovinos</button>
+    <button type="button" class="add-fab" data-nav="nuevo">+</button>
+    <button type="button" class="ni" id="n-sanidad" data-nav="sanidad"><span>🩺</span>Sanidad</button>
+    <button type="button" class="ni" id="n-reportes" data-nav="reportes"><span>📋</span>Reportes</button>
+  </nav>
+</div>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0C3B24">
+
+<script>
+var farm = "Hacienda El Progreso";
+var ftab = "san";
+var tmpImg = "";
+var statusFilter = "all";
+
+var db = [
+  {
+    c: "1247", r: "Nelore", s: "Hembra", p: 380, e: "Sano", img: "",
+    nac: "15/03/2023", edad: "2 años, 7 meses",
+    px: "Fiebre Aftosa · 10/11/2025",
+    vet: "Revisión veterinaria · Chequeo general · 20/02/2026",
+    san: [
+      { f: "10/04/2025 · Vacuna", t: "Fiebre Aftosa", p: "10/11/2025" },
+      { f: "15/06/2025 · Desparasitación", t: "Próxima", p: "10/11/2025" },
+      { f: "15/06/2025 · Desparasitación", t: "Ivermectina", p: "15/12/2025" },
+      { f: "20/06/2025 · Desparasitación", t: "Próxima", p: "15/12/2025" },
+      { f: "20/08/2025 · Revisión veterinaria", t: "Chequeo general", p: "20/02/2026" },
+      { f: "20/08/2025 · Chequeo", t: "Próxima general", p: "20/02/2026" }
+    ],
+    rep: [
+      { f: "18/07/2025 · Diagnóstico", t: "Gestación: Preñada", p: "15/04/2026" }
+    ],
+    pes: [
+      { f: "20/08/2025 · Control corral", t: "380 kg", p: "+18 kg" }
+    ]
+  },
+  {
+    c: "1248", r: "Nelore", s: "Macho", p: 520, e: "Sano", img: "",
+    nac: "10/01/2023", edad: "2 años, 9 meses",
+    px: "Desparasitación · 15/12/2026",
+    vet: "Evaluación andrológica programada",
+    san: [
+      { f: "15/06/2025 · Desparasitación", t: "Ivermectina 3.15%", p: "15/12/2026" }
+    ],
+    rep: [
+      { f: "01/03/2025 · Andrología", t: "Reproductor Apto", p: "01/03/2026" }
+    ],
+    pes: [
+      { f: "10/08/2025 · Potrero norte", t: "520 kg", p: "+25 kg" }
+    ]
+  },
+  {
+    c: "1250", r: "Brahman", s: "Hembra", p: 410, e: "Por revisar", img: "",
+    nac: "02/05/2023", edad: "2 años, 5 meses",
+    px: "Revisión vet. · Urgente",
+    vet: "Chequeo de ganancia de peso",
+    san: [
+      { f: "05/09/2025 · Control sanitario", t: "Ganancia de peso", p: "Pendiente" }
+    ],
+    rep: [
+      { f: "10/04/2025 · Parto natural", t: "Cría 34 kg", p: "Observación" }
+    ],
+    pes: [
+      { f: "05/09/2025 · Observación", t: "410 kg", p: "-5 kg" }
+    ]
+  }
+];
+
+try {
+  if (localStorage.bv_db_v6) db = JSON.parse(localStorage.bv_db_v6);
+  if (localStorage.bv_fm_v6) farm = localStorage.bv_fm_v6;
+} catch (e) {}
+
+function save() {
+  try {
+    localStorage.bv_db_v6 = JSON.stringify(db);
+    localStorage.bv_fm_v6 = farm;
+  } catch (e) {}
+}
+
+function editFarm() {
+  var n = prompt("Nombre de Hacienda o Propietario:", farm);
+  if (n && n.trim()) {
+    farm = n.trim();
+    save();
+    render();
+  }
+}
+
+function setFilter(st) {
+  statusFilter = (statusFilter === st && st !== "all") ? "all" : st;
+  document.querySelectorAll(".mc").forEach(function (el) { el.classList.remove("active-kpi"); });
+  var el = document.getElementById(statusFilter === "Por revisar" ? "kpi-Por-revisar" : "kpi-" + statusFilter);
+  if (el) el.classList.add("active-kpi");
+  var bar = document.getElementById("filter-bar");
+  if (bar) {
+    if (statusFilter === "all") {
+      bar.classList.remove("show");
+    } else {
+      bar.classList.add("show");
+      var l = document.getElementById("filter-label");
+      if (l) l.textContent = "Filtrando por estado: " + statusFilter;
+    }
+  }
+  render();
+}
+
+function go(v) {
+  document.querySelectorAll(".view").forEach(function (x) { x.classList.remove("active"); });
+  var tv = document.getElementById("v-" + v);
+  if (tv) tv.classList.add("active");
+  document.querySelectorAll(".ni").forEach(function (x) { x.classList.remove("active"); });
+  var nb = document.getElementById("n-" + v);
+  if (nb) nb.classList.add("active");
+  var sb = document.getElementById("main-sbox");
+  if (sb) {
+    if (v === "ficha") sb.classList.add("hidden");
+    else sb.classList.remove("hidden");
+  }
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function readFileImg(ev, cb) {
+  var inp = ev.target;
+  var f = inp && inp.files ? inp.files[0] : null;
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function () {
+    if (typeof r.result === "string") cb(r.result);
+  };
+  r.readAsDataURL(f);
+}
+
+function addCow() {
+  var cEl = document.getElementById("ncod");
+  var rEl = document.getElementById("nraz");
+  var sEl = document.getElementById("nsex");
+  var nacEl = document.getElementById("nnac");
+  var edaEl = document.getElementById("neda");
+  var pEl = document.getElementById("npes");
+  var eEl = document.getElementById("nest");
+  var c = cEl ? cEl.value.trim().toUpperCase() : "";
+  var r = rEl ? rEl.value : "Nelore";
+  var s = sEl ? sEl.value : "Hembra";
+  var nac = (nacEl && nacEl.value.trim()) || "15/03/2023";
+  var edad = (edaEl && edaEl.value.trim()) || "2 años, 7 meses";
+  var p = pEl ? Number(pEl.value) : 0;
+  var e = eEl ? eEl.value : "Sano";
+  if (!c || !p) {
+    alert("Completa Código / Arete y Peso Actual.");
+    return;
+  }
+  db.unshift({
+    c: c, r: r, s: s, p: p, e: e, nac: nac, edad: edad, img: tmpImg,
+    px: e === "Por revisar" ? "Revisión vet. · Urgente" : "Vacuna preventiva",
+    vet: "Chequeo de ingreso",
+    san: [{ f: "10/04/2025 · Registro", t: "Control inicial", p: "Pendiente" }],
+    rep: [],
+    pes: [{ f: "20/08/2025 · Registro", t: p + " kg", p: "Base" }]
+  });
+  tmpImg = "";
+  save();
+  setFilter("all");
+  go("inicio");
+}
+
+function renderHistTable(i) {
+  var x = db[i];
+  var box = document.getElementById("hist-box");
+  if (!x || !box) return;
+  var headA = "Sanitario";
+  var headB = "Detalle";
+  var headC = "Próxima";
+  var rows = [];
+  if (ftab === "san") {
+    rows = x.san.map(function (m) {
+      return "<tr><td>" + m.f + "</td><td>" + m.t + "</td><td>" + (m.p || "—") + "</td></tr>";
+    });
+  } else if (ftab === "rep") {
+    headA = "Reproductivo";
+    headB = "Evento";
+    headC = "Seguimiento";
+    rows = x.rep.length
+      ? x.rep.map(function (m) {
+          return "<tr><td>" + m.f + "</td><td>" + m.t + "</td><td>" + (m.p || "—") + "</td></tr>";
+        })
+      : ["<tr><td colspan=\"3\" style=\"color:var(--g)\">Sin registros reproductivos.</td></tr>"];
+  } else {
+    headA = "Control Peso";
+    headB = "Peso";
+    headC = "Nota";
+    rows = x.pes.map(function (m) {
+      return "<tr><td>" + m.f + "</td><td><b>" + m.t + "</b></td><td>" + (m.p || "—") + "</td></tr>";
+    });
+  }
+  box.innerHTML =
+    "<div class=\"hist-table-wrap\"><table class=\"hist-table\"><thead><tr><th>" +
+    headA + "</th><th>" + headB + "</th><th>" + headC +
+    "</th></tr></thead><tbody>" + rows.join("") + "</tbody></table></div>";
+}
+
+function openCow(i) {
+  ftab = "san";
+  var x = db[i];
+  var fichaEl = document.getElementById("ficha");
+  if (!x || !fichaEl) return;
+
+  var photoHtml = x.img ? ("<img src=\"" + x.img + "\" alt=\"" + x.c + "\">") : "🐄";
+  var sexSign = x.s === "Macho" ? "♂" : "♀";
+  var razaOpts = ["Nelore", "Brahman", "Gyr", "Brangus"].map(function (rz) {
+    return "<option" + (x.r === rz ? " selected" : "") + ">" + rz + "</option>";
+  }).join("");
+
+  fichaEl.innerHTML =
+    "<div class=\"hero-card\">" +
+      "<label class=\"hero-photo\">" + photoHtml +
+        "<span class=\"av-cam\">📷</span>" +
+        "<input id=\"f-cam-inp\" type=\"file\" accept=\"image/*\" capture=\"environment\" style=\"display:none\">" +
+      "</label>" +
+      "<div class=\"hero-body\">" +
+        "<div class=\"hero-sub-lbl\">Codigo / " + x.r + "</div>" +
+        "<div class=\"hero-code-row\"><span class=\"badge-bov\">BOVINO</span><span class=\"hero-code\">" + x.c + "</span></div>" +
+        "<div class=\"hero-rows\">" +
+          "<div class=\"hero-r\"><span>👤 " + x.r + "</span><span>Nacimiento</span><b>" + x.nac + "</b></div>" +
+          "<div class=\"hero-r\"><span>🐄 " + x.s + "</span><b>" + x.nac + "</b></div>" +
+          "<div class=\"hero-r\"><span>" + sexSign + " Peso</span><b>" + x.p + " kg</b></div>" +
+        "</div>" +
+      "</div>" +
+    "</div>" +
+    "<div class=\"info-2x2\">" +
+      "<div class=\"info-tile\"><div class=\"it-title\">Raza " + x.r + "</div><div class=\"it-line\">💊 Sexo " + x.s + "</div><div class=\"it-line\">📋 Edad " + x.edad + "</div></div>" +
+      "<div class=\"info-tile\"><div class=\"it-title\">Sexo " + x.s + "</div><div class=\"it-line\">Nacimiento " + x.nac + "</div><div class=\"it-line\">Peso actual " + x.p + " kg</div></div>" +
+    "</div>" +
+    "<div class=\"pill-tabs\">" +
+      "<button type=\"button\" class=\"ptab active\" id=\"ptab-san\">+ Sanitario</button>" +
+      "<button type=\"button\" class=\"ptab\" id=\"ptab-rep\">🧬 Reproductivo</button>" +
+      "<button type=\"button\" class=\"ptab\" id=\"ptab-pes\">⚖️ Peso</button>" +
+    "</div>" +
+    "<div id=\"hist-box\"></div>" +
+    "<div id=\"fedit\" class=\"iform\">" +
+      "<div class=\"fg\"><label>Código / Arete</label><input id=\"ecod\" value=\"" + x.c + "\"></div>" +
+      "<div class=\"fg\"><label>Raza</label><select id=\"eraz\">" + razaOpts + "</select></div>" +
+      "<div class=\"fg\"><label>Sexo</label><select id=\"esex\"><option" + (x.s === "Hembra" ? " selected" : "") + ">Hembra</option><option" + (x.s === "Macho" ? " selected" : "") + ">Macho</option></select></div>" +
+      "<div class=\"fg\"><label>Peso (kg)</label><input id=\"epes\" type=\"number\" value=\"" + x.p + "\"></div>" +
+      "<div class=\"fg\"><label>Estado</label><select id=\"eest\"><option" + (x.e === "Sano" ? " selected" : "") + ">Sano</option><option" + (x.e === "Por revisar" ? " selected" : "") + ">Por revisar</option></select></div>" +
+      "<button type=\"button\" class=\"btn\" id=\"btn-save-edit\">Guardar cambios</button>" +
+      "<button type=\"button\" class=\"btn-del\" id=\"btn-del-cow\">🗑️ Eliminar bovino</button>" +
+    "</div>";
+
+  var camInp = document.getElementById("f-cam-inp");
+  if (camInp) {
+    camInp.addEventListener("change", function (ev) {
+      readFileImg(ev, function (img) {
+        db[i].img = img;
+        save();
+        openCow(i);
+      });
+    });
+  }
+
+  var saveEditBtn = document.getElementById("btn-save-edit");
+  if (saveEditBtn) {
+    saveEditBtn.addEventListener("click", function () {
+      var cVal = document.getElementById("ecod");
+      var c = cVal ? cVal.value.trim().toUpperCase() : "";
+      if (!c) return;
+      var rVal = document.getElementById("eraz");
+      var sVal = document.getElementById("esex");
+      var pVal = document.getElementById("epes");
+      var eVal = document.getElementById("eest");
+      db[i].c = c;
+      if (rVal) db[i].r = rVal.value;
+      if (sVal) db[i].s = sVal.value;
+      if (pVal && Number(pVal.value)) db[i].p = Number(pVal.value);
+      if (eVal) db[i].e = eVal.value;
+      save();
+      openCow(i);
+    });
+  }
+
+  var delBtn = document.getElementById("btn-del-cow");
+  if (delBtn) {
+    delBtn.addEventListener("click", function () {
+      if (!confirm("¿Eliminar registro?")) return;
+      db.splice(i, 1);
+      save();
+      go("inicio");
+    });
+  }
+
+  [["ptab-san", "san"], ["ptab-rep", "rep"], ["ptab-pes", "pes"]].forEach(function (pair) {
+    var bEl = document.getElementById(pair[0]);
+    if (bEl) {
+      bEl.addEventListener("click", function () {
+        ftab = pair[1];
+        document.querySelectorAll(".ptab").forEach(function (b) { b.classList.remove("active"); });
+        bEl.classList.add("active");
+        renderHistTable(i);
+      });
+    }
+  });
+
+  renderHistTable(i);
+  go("ficha");
+}
+
+function submitSearchEnter() {
+  var qEl = document.getElementById("q");
+  var raw = (qEl ? qEl.value : "").trim().toLowerCase();
+  if (!raw) return;
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].c.toLowerCase() === raw) {
+      openCow(i);
+      return;
+    }
+  }
+  var matches = [];
+  for (var j = 0; j < db.length; j++) {
+    if (db[j].c.toLowerCase().indexOf(raw) !== -1 || db[j].r.toLowerCase().indexOf(raw) !== -1) {
+      matches.push(j);
+    }
+  }
+  if (matches.length === 1) openCow(matches[0]);
+}
+
+function setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function render() {
+  setText("fname", farm);
+  var tot = db.length;
+  var san = db.filter(function (x) { return x.e === "Sano"; }).length;
+  var rev = db.filter(function (x) { return x.e === "Por revisar"; }).length;
+  var sumP = db.reduce(function (acc, b) { return acc + Number(b.p || 0); }, 0);
+  var prom = tot ? Math.round(sumP / tot) : 0;
+
+  setText("s-tot", String(tot));
+  setText("s-san", String(san));
+  setText("s-rev", String(rev));
+  setText("s-pes", prom + " kg");
+
+  var qEl = document.getElementById("q");
+  var q = (qEl ? qEl.value : "").toLowerCase().trim();
+  var filtered = [];
+  for (var idx = 0; idx < db.length; idx++) {
+    var x = db[idx];
+    var okText = !q || x.c.toLowerCase().indexOf(q) !== -1 || x.r.toLowerCase().indexOf(q) !== -1 || x.e.toLowerCase().indexOf(q) !== -1;
+    var okSt = (statusFilter === "all" || x.e === statusFilter);
+    if (okText && okSt) filtered.push({ x: x, idx: idx });
+  }
+
+  var l1 = document.getElementById("list1");
+  if (l1) {
+    if (filtered.length) {
+      l1.innerHTML = filtered.map(function (item) {
+        var itemX = item.x;
+        var itemIdx = item.idx;
+        var isRev = itemX.e === "Por revisar";
+        var avHtml = itemX.img ? ("<img src=\"" + itemX.img + "\" alt=\"" + itemX.c + "\">") : "🐄";
+        return "<div class=\"card\" data-open=\"" + itemIdx + "\">" +
+          "<div class=\"ch\"><div class=\"av\">" + avHtml + "</div>" +
+          "<div class=\"cinfo\"><div class=\"crow-top\"><div><div class=\"lbl-sm\">Identificación</div><div class=\"code-big\">" + itemX.c + "</div></div><span class=\"badge-bov\">BOVINO</span></div>" +
+          "<div class=\"meta-line\">" + itemX.r + " · " + itemX.s + " · " + itemX.p + " kg</div>" +
+          "<div class=\"kv-row\"><span>Raza: " + itemX.r + "</span><b>" + itemX.p + " kg</b></div>" +
+          "<div class=\"kv-row\"><span>Sexo: " + itemX.s + "</span></div></div></div>" +
+          "<div class=\"hstrip\"><div class=\"hstrip-top " + (isRev ? "warn" : "") + "\"><span>" + (isRev ? "⚠️" : "✓") + "</span><span>" + itemX.px + "</span></div>" +
+          "<div class=\"hstrip-bot\"><span>🩺</span><span>" + itemX.vet + "</span></div></div>" +
+          "<div class=\"rec-foot\"><span>🕒 Recientes controles</span><span style=\"color:var(--v);font-weight:700\">Ver ficha →</span></div></div>";
+      }).join("");
+    } else {
+      l1.innerHTML = "<div class=\"box\" style=\"text-align:center;color:var(--g)\">Sin resultados.</div>";
+    }
+    l1.querySelectorAll("[data-open]").forEach(function (card) {
+      card.addEventListener("click", function () {
+        openCow(Number(card.getAttribute("data-open")));
+      });
+    });
+  }
+
+  var l2 = document.getElementById("list2");
+  if (l2) {
+    l2.innerHTML = filtered.map(function (item) {
+      var itemX = item.x;
+      var itemIdx = item.idx;
+      var avHtml = itemX.img ? ("<img src=\"" + itemX.img + "\" alt=\"" + itemX.c + "\">") : "🐄";
+      return "<div class=\"card\" data-open2=\"" + itemIdx + "\"><div class=\"ch\" style=\"align-items:center\">" +
+        "<div class=\"av av-sm\">" + avHtml + "</div>" +
+        "<div class=\"cinfo\"><div class=\"crow-top\"><b>" + itemX.c + "</b><span class=\"pill " + (itemX.e === "Por revisar" ? "rev" : "") + "\">" + itemX.e + "</span></div>" +
+        "<div class=\"meta-line\" style=\"font-size:11.5px;font-weight:500\">" + itemX.r + " · " + itemX.s + " · " + itemX.p + " kg</div></div></div></div>";
+    }).join("");
+    l2.querySelectorAll("[data-open2]").forEach(function (card) {
+      card.addEventListener("click", function () {
+        openCow(Number(card.getAttribute("data-open2")));
+      });
+    });
+  }
+
+  var stb = document.getElementById("san-tb");
+  if (stb) {
+    var srows = "";
+    db.forEach(function (cow) {
+      cow.san.forEach(function (m) {
+        srows += "<tr><td><b>" + cow.c + "</b></td><td>" + m.t + "</td><td>" + (m.p || "—") + "</td></tr>";
+      });
+    });
+    stb.innerHTML = srows || "<tr><td colspan=\"3\">Sin controles</td></tr>";
+  }
+
+  var rb = document.getElementById("rep-box");
+  if (rb) {
+    rb.innerHTML =
+      "<p style=\"margin-bottom:8px\"><b>Hacienda:</b> " + farm + "</p>" +
+      "<p style=\"margin-bottom:8px\"><b>Total bovinos:</b> " + tot + " (" + san + " sanos / " + rev + " por revisar)</p>" +
+      "<p><b>Peso promedio:</b> " + prom + " kg</p>";
+  }
+}
+
+function csv() {
+  var lines = ["Arete;Raza;Sexo;Peso_kg;Estado;Proximo_Control"];
+  db.forEach(function (x) {
+    lines.push("\"" + x.c + "\";\"" + x.r + "\";\"" + x.s + "\";" + x.p + ";\"" + x.e + "\";\"" + x.px + "\"");
+  });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" }));
+  a.download = "bovisense_hato.csv";
+  a.click();
+}
+
+function onClickId(id, fn) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener("click", fn);
+}
+
+onClickId("btn-toggle-search", function () {
+  go("inicio");
+  setTimeout(function () {
+    var qEl = document.getElementById("q");
+    if (qEl) qEl.focus();
+  }, 120);
+});
+onClickId("btn-farm-top", editFarm);
+onClickId("btn-farm-lbl", editFarm);
+
+var qInput = document.getElementById("q");
+if (qInput) {
+  qInput.addEventListener("input", render);
+  qInput.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter") {
+      ev.preventDefault();
+      submitSearchEnter();
+    }
+  });
+}
+
+onClickId("kpi-all", function () { setFilter("all"); });
+onClickId("kpi-Sano", function () { setFilter("Sano"); });
+onClickId("kpi-Por-revisar", function () { setFilter("Por revisar"); });
+onClickId("kpi-pes", function () { go("reportes"); });
+onClickId("btn-clear-filter", function () { setFilter("all"); });
+onClickId("link-inv", function () { go("bovinos"); });
+onClickId("link-all-inv", function () { setFilter("all"); });
+onClickId("btn-back", function () { go("inicio"); });
+onClickId("act-edit", function () {
+  var fe = document.getElementById("fedit");
+  if (fe) fe.classList.toggle("open");
+});
+
+var nimgEl = document.getElementById("nimg");
+if (nimgEl) {
+  nimgEl.addEventListener("change", function (ev) {
+    readFileImg(ev, function (img) { tmpImg = img; });
+  });
+}
+
+onClickId("btn-save-cow", addCow);
+onClickId("btn-csv", csv);
+onClickId("btn-print", function () { window.print(); });
+
+document.querySelectorAll("[data-nav]").forEach(function (el) {
+  el.addEventListener("click", function () {
+    var v = el.getAttribute("data-nav");
+    if (v) go(v);
+  });
+});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+}
+
+render();
+</script>
