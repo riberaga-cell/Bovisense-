@@ -1,716 +1,1843 @@
+<!DOCTYPE html>
 <html lang="es">
-  <link rel="manifest" href="manifest.json">
-  
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>BOVISENSE — Tu ganado, en buenas manos</title>
-<style>
-:root{
-  --v:#0C3B24;--c:#F7F5EE;--b:#FFFFFF;--d:#D4AF37;
-  --t:#1B221E;--g:#67726C;--bd:#E6E2D8;--a:#C84B31;
-  --ok:#0E5A36;--ok-bg:#E3F2EA;
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body{background:#222825;display:flex;justify-content:center;min-height:100vh;color:var(--t)}
-.app{width:100%;max-width:430px;min-height:100vh;background:var(--c);position:relative;padding-bottom:92px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1e4d38" />
+  <title>BOVISENSE — Tu ganado, en buenas manos</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --verde: #1e4d38;
+      --verde-oscuro: #163a2a;
+      --verde-suave: #e6f2ec;
+      --fondo: #f6f5f0;
+      --blanco: #ffffff;
+      --texto: #1e2923;
+      --gris: #5e6b64;
+      --borde: #e5e7e2;
+      --rojo: #c93b2b;
+      --naranja: #b45309;
+    }
 
-header{background:var(--v);color:var(--b);padding:16px 18px 20px;border-radius:0 0 24px 24px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.logo{display:flex;align-items:center;gap:10px}
-.ico-ring{width:44px;height:44px;border-radius:50%;border:1.8px solid var(--d);display:flex;align-items:center;justify-content:center;background:rgba(212,175,55,.08);flex-shrink:0}
-.tit{font-size:20px;font-weight:900;color:var(--d);line-height:1.05}
-.sub{font-size:10.5px;color:#DCE6E0;margin-top:2px}
-.hdr-right{display:flex;align-items:center;gap:8px}
-.hdr-search-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:var(--b);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.profile-btn{width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.85);background:#264E3A;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-.farm-caption{font-size:10px;color:#C8D8CF;text-align:right;margin-top:4px;cursor:pointer}
-.sbox{margin-top:12px;background:var(--b);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:10px}
-.sbox.hidden{display:none}
-.sbox input{border:none;outline:none;width:100%;font-size:14px;color:var(--t);background:transparent}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
 
-.view{display:none;padding:16px}
-.view.active{display:block}
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      padding-bottom: 88px;
+    }
 
-.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:-6px;margin-bottom:14px}
-.mc{background:var(--b);border:1.5px solid var(--bd);border-radius:14px;padding:10px 5px;text-align:center;cursor:pointer}
-.mc.active-kpi{border-color:var(--v);background:#EEF5F1;transform:translateY(-2px)}
-.mc-ico{width:32px;height:24px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;color:var(--v);font-size:16px}
-.mc b{display:block;font-size:13px;color:var(--v);margin-bottom:2px}
-.mc span{display:block;font-size:10.5px;font-weight:600;color:var(--t);line-height:1.15}
+    /* Pantalla de inicio de sesión / recuperación */
+    #auth-screen {
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--verde) 0%, var(--verde-oscuro) 42%, var(--fondo) 42%);
+      padding: 28px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-.filter-bar{display:none;align-items:center;justify-content:space-between;background:#E6EFEA;color:var(--v);padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:12px}
-.filter-bar.show{display:flex}
-.filter-bar button{background:var(--v);color:var(--b);border:none;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer}
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--blanco);
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
 
-.st{font-size:15px;font-weight:800;color:var(--t);margin:10px 0;display:flex;align-items:center;justify-content:space-between}
-.st small{font-size:11px;font-weight:700;color:var(--v);cursor:pointer}
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
 
-.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
-.qb{background:var(--b);border:1px solid var(--bd);border-radius:14px;padding:12px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:var(--t);cursor:pointer;text-align:left}
-.qb-ico{width:24px;height:24px;border-radius:6px;background:#EEF3F0;color:var(--v);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+    .auth-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--verde);
+    }
 
-.card{background:var(--b);border:1px solid var(--bd);border-radius:16px;padding:12px;margin-bottom:12px;cursor:pointer}
-.ch{display:flex;gap:12px;align-items:flex-start}
-.av{width:104px;height:112px;border-radius:12px;background:#E8E4D8;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
-.av img{width:100%;height:100%;object-fit:cover}
-.av-cam{position:absolute;bottom:5px;right:5px;background:rgba(12,59,36,.88);color:#fff;font-size:11px;padding:3px 6px;border-radius:7px}
-.cinfo{flex:1;min-width:0}
-.crow-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
-.lbl-sm{font-size:10px;color:var(--g);font-weight:600}
-.code-big{font-size:20px;font-weight:900;color:var(--t);line-height:1.15}
-.badge-bov{background:var(--v);color:var(--b);font-size:9px;font-weight:800;letter-spacing:.6px;padding:4px 8px;border-radius:6px;text-transform:uppercase}
-.meta-line{font-size:12px;font-weight:700;color:var(--t);margin-top:4px}
-.kv-row{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;margin-top:4px}
-.kv-row span{color:var(--g)}
-.kv-row b{color:var(--t);font-weight:800}
+    .auth-sub {
+      font-size: 0.82rem;
+      color: var(--gris);
+      margin-top: 2px;
+    }
 
-.hstrip{margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #DCE5DF}
-.hstrip-top{background:#E6EFEA;color:var(--v);padding:6px 10px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px}
-.hstrip-top.warn{background:#FDEAE5;color:var(--a)}
-.hstrip-bot{background:#F9F8F4;padding:7px 10px;font-size:11px;color:var(--t);display:flex;align-items:center;gap:6px}
-.rec-foot{margin-top:8px;padding-top:7px;border-top:1px solid #EFECE3;font-size:11px;font-weight:600;color:var(--g);display:flex;align-items:center;justify-content:space-between}
+    .mensaje-alerta {
+      background: #fef2f2;
+      color: var(--rojo);
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
 
-.av-sm{width:64px;height:64px;border-radius:12px;font-size:28px}
-.pill{font-size:10px;font-weight:800;padding:3px 8px;border-radius:8px;background:var(--ok-bg);color:var(--ok);display:inline-block}
-.pill.rev{background:#FDEAE5;color:var(--a)}
+    .mensaje-ok {
+      background: var(--verde-suave);
+      color: var(--verde);
+      border: 1px solid #b7e4c7;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
 
-.res-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.back-link{background:none;border:none;color:var(--v);font-weight:800;font-size:13px;cursor:pointer}
-.edit-mini-btn{background:var(--b);border:1.5px solid var(--v);color:var(--v);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer}
-.hero-card{background:var(--b);border:1px solid var(--bd);border-radius:16px;padding:12px;display:flex;gap:12px;align-items:stretch;margin-bottom:12px}
-.hero-photo{width:126px;min-height:146px;border-radius:12px;background:#E8E4D8;overflow:hidden;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:42px;cursor:pointer}
-.hero-photo img{width:100%;height:100%;object-fit:cover}
-.hero-body{flex:1;min-width:0}
-.hero-sub-lbl{font-size:11px;color:var(--g);font-weight:600}
-.hero-code-row{display:flex;align-items:center;gap:7px;margin-top:2px;flex-wrap:wrap}
-.hero-code{font-size:22px;font-weight:900;color:var(--t);line-height:1.1}
-.hero-rows{margin-top:8px;display:flex;flex-direction:column;gap:5px;font-size:11.5px}
-.hero-r{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.hero-r span:first-child{color:var(--g)}
-.hero-r b{color:var(--t);font-weight:800}
+    .btn-link-suave {
+      background: none;
+      border: none;
+      color: var(--verde);
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 10px;
+    }
 
-.info-2x2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.info-tile{background:var(--b);border:1px solid var(--bd);border-radius:14px;padding:11px 12px}
-.it-title{font-size:12.5px;font-weight:800;color:var(--t);margin-bottom:6px}
-.it-line{font-size:11.5px;color:var(--t);font-weight:600;margin-top:5px}
+    /* App principal protegida */
+    #app-shell {
+      display: none;
+    }
 
-.pill-tabs{display:grid;grid-template-columns:1.25fr 1.15fr .85fr;gap:8px;margin-bottom:12px}
-.ptab{background:var(--b);border:1px solid var(--bd);color:var(--t);border-radius:12px;padding:10px 8px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
-.ptab.active{background:var(--v);border-color:var(--v);color:var(--b)}
+    .hero-header {
+      background: var(--verde);
+      color: var(--blanco);
+      padding: 18px 16px 22px;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
+    }
 
-.hist-table-wrap{background:var(--b);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:12px}
-.hist-table{width:100%;border-collapse:collapse;font-size:11.5px}
-.hist-table th{background:var(--v);color:var(--b);padding:9px 10px;text-align:left;font-weight:700}
-.hist-table td{padding:9px 10px;border-bottom:1px solid #ECE8DD;color:var(--t)}
-.hist-table tr:last-child td{border-bottom:none}
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-.box{background:var(--b);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
-.iform{background:#EFECE2;padding:12px;border-radius:12px;margin-bottom:12px;display:none}
-.iform.open{display:block}
-.fg{margin-bottom:10px}
-.fg label{display:block;font-size:11px;font-weight:700;color:var(--v);margin-bottom:4px}
-.fg input,.fg select{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--bd);font-size:13px;background:var(--b);color:var(--t)}
-.btn{width:100%;padding:12px;background:var(--v);color:var(--d);border:none;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;margin-top:6px}
-.btn2{width:100%;padding:11px;background:var(--b);color:var(--v);border:1.5px solid var(--v);border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;margin-top:6px}
-.btn-del{width:100%;padding:10px;background:#FDEAE5;color:var(--a);border:1px solid #F3C3B7;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer;margin-top:8px}
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-table{width:100%;border-collapse:collapse;background:var(--b);font-size:12px;border-radius:10px;overflow:hidden}
-th{background:var(--v);color:var(--b);text-align:left;padding:8px}
-td{padding:8px;border-bottom:1px solid var(--bd)}
+    .logo-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid #95d5b2;
+      background: var(--verde-oscuro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #d8f3dc;
+      flex-shrink: 0;
+    }
 
-nav{position:fixed;bottom:0;width:100%;max-width:430px;height:68px;background:var(--b);border-top:1px solid var(--bd);display:flex;justify-content:space-around;align-items:center;z-index:20}
-.ni{background:none;border:none;font-size:11px;color:var(--t);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-weight:600;min-width:56px}
-.ni.active{color:var(--v);font-weight:800;border-bottom:2.5px solid var(--v);padding-bottom:2px}
-.add-fab{width:52px;height:52px;border-radius:50%;background:var(--v);color:var(--b);font-size:28px;line-height:1;border:4px solid var(--c);margin-top:-24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-</style>
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: #f4d35e;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: #d8f3dc;
+      margin-top: 2px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hacienda-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: right;
+      cursor: pointer;
+    }
+
+    .hacienda-nombre {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--blanco);
+    }
+
+    .hacienda-edit {
+      font-size: 0.7rem;
+      color: #b7e4c7;
+    }
+
+    .avatar-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .btn-salir {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--blanco);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .sesion-barra {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      font-size: 0.76rem;
+      color: #d8f3dc;
+    }
+
+    .search-box {
+      background: var(--blanco);
+      border-radius: 14px;
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 10px 4px;
+      font-size: 0.92rem;
+      color: var(--texto);
+      background: transparent;
+    }
+
+    .btn-limpiar {
+      border: none;
+      background: var(--verde-suave);
+      color: var(--verde);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 6px 9px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px 14px 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      background: var(--blanco);
+      border: 1.5px solid var(--borde);
+      border-radius: 14px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    .stat-card.destacada {
+      border-color: var(--verde);
+    }
+
+    .stat-num {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--verde);
+      margin: 3px 0 2px;
+    }
+
+    .stat-num.alerta {
+      color: var(--rojo);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--gris);
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--texto);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .link-accion {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--verde);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .quick-btn {
+      background: var(--blanco);
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .quick-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--verde-suave);
+      color: var(--verde);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .quick-text {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--texto);
+      line-height: 1.25;
+    }
+
+    .card {
+      background: var(--blanco);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .ficha-bovino {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .ficha-izq {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ficha-thumb {
+      width: 66px;
+      height: 76px;
+      border-radius: 12px;
+      background: #efede6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .ficha-codigo {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--texto);
+    }
+
+    .ficha-meta {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--texto);
+      margin-top: 2px;
+    }
+
+    .ficha-sub {
+      font-size: 0.78rem;
+      color: var(--gris);
+      margin-top: 2px;
+    }
+
+    .badge-bovino {
+      background: var(--verde);
+      color: var(--blanco);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.4px;
+      text-align: right;
+    }
+
+    .peso-destacado {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--texto);
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gris);
+    }
+
+    input, select {
+      border: 1px solid #cfd6d1;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 0.9rem;
+      color: var(--texto);
+      background: var(--blanco);
+    }
+
+    .permisos-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+      background: #fafaf7;
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--texto);
+      font-weight: 600;
+    }
+
+    .check-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--verde);
+    }
+
+    .btn-guardar {
+      margin-top: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      background: var(--verde);
+      color: var(--blanco);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 11px;
+      cursor: pointer;
+    }
+
+    .btn-secundario {
+      border: 1px solid var(--verde);
+      background: var(--verde-suave);
+      color: var(--verde);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-peligro {
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: var(--rojo);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .acciones-fila {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .lista-registros {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fila-registro {
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fafaf7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .fila-titulo {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--texto);
+    }
+
+    .fila-detalle {
+      font-size: 0.78rem;
+      color: var(--gris);
+      margin-top: 2px;
+    }
+
+    .chip {
+      background: var(--verde-suave);
+      color: var(--verde);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .chip.inactivo {
+      background: #fef2f2;
+      color: var(--rojo);
+    }
+
+    .vacio {
+      font-size: 0.84rem;
+      color: var(--gris);
+      padding: 6px 0;
+    }
+
+    /* Barra inferior de 5 columnas con botón central + */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--blanco);
+      border-top: 1px solid var(--borde);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      padding: 6px 4px 8px;
+      z-index: 20;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--gris);
+      cursor: pointer;
+      padding: 4px 2px;
+    }
+
+    .nav-btn.active {
+      color: var(--verde);
+    }
+
+    .nav-plus {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--verde);
+      color: var(--blanco);
+      border: 3px solid var(--fondo);
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: -18px auto 0;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+    }
+  </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div class="top">
-      <div class="logo">
-        <div class="ico-ring">🐂</div>
+  <!-- PANTALLA DE ACCESO Y RECUPERACIÓN DE CONTRASEÑA -->
+  <div id="auth-screen">
+    <div class="auth-card" id="login-box">
+      <div class="auth-brand">
+        <div class="logo-circle">BS</div>
         <div>
-          <div class="tit">BOVISENSE</div>
-          <div class="sub">Tu ganado, en buenas manos</div>
+          <div class="auth-title">BOVISENSE</div>
+          <div class="auth-sub">Acceso protegido · Privacidad del establecimiento</div>
         </div>
       </div>
-      <div class="hdr-right">
-        <button type="button" class="hdr-search-btn" id="btn-toggle-search">🔍</button>
+
+      <div id="auth-feedback"></div>
+
+      <form id="form-login">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <label>
+            Usuario
+            <input type="text" id="login-usuario" required autocomplete="username" placeholder="Ej. dueno" />
+          </label>
+          <label>
+            Contraseña
+            <input type="password" id="login-clave" required autocomplete="current-password" placeholder="Ingresa tu contraseña" />
+          </label>
+        </div>
+        <button type="submit" class="btn-guardar">Iniciar sesión</button>
+      </form>
+
+      <button type="button" class="btn-link-suave" id="btn-ir-recuperar">
+        ¿Olvidaste tu contraseña? Recuperar acceso
+      </button>
+
+      <p class="ficha-sub" style="margin-top: 12px;">
+        Acceso inicial del propietario: usuario <strong>dueno</strong> · clave <strong>bovi2026</strong> (puedes cambiarla o recuperarla con tu palabra/código de seguridad).
+      </p>
+    </div>
+
+    <div class="auth-card" id="recover-box" style="display: none;">
+      <div class="auth-brand">
+        <div class="logo-circle">🔑</div>
         <div>
-          <div class="profile-btn" id="btn-farm-top">👤</div>
-          <div class="farm-caption" id="btn-farm-lbl"><span id="fname">Hacienda El Progreso</span> ✏️</div>
+          <div class="auth-title">Recuperar contraseña</div>
+          <div class="auth-sub">Restablece el acceso de tu cuenta</div>
         </div>
       </div>
-    </div>
-    <div class="sbox" id="main-sbox">
-      <span>🔍</span>
-      <input id="q" placeholder="Ingresa código o arete (ej. 1247) y presiona Enter...">
-    </div>
-  </header>
 
-  <div id="v-inicio" class="view active">
-    <div class="mgrid">
-      <div class="mc active-kpi" id="kpi-all"><div class="mc-ico">🐂</div><b id="s-tot">3</b><span>Total bovinos</span></div>
-      <div class="mc" id="kpi-Sano"><div class="mc-ico">🐄</div><b id="s-san">2</b><span>Sanos</span></div>
-      <div class="mc" id="kpi-Por-revisar"><div class="mc-ico">🛡️</div><b id="s-rev" style="color:var(--a)">1</b><span>Por revisar</span></div>
-      <div class="mc" id="kpi-pes"><div class="mc-ico">☀️</div><b id="s-pes">437 kg</b><span>Peso promedio</span></div>
-    </div>
+      <div id="recover-feedback"></div>
 
-    <div class="filter-bar" id="filter-bar">
-      <span id="filter-label">Mostrando: Todos</span>
-      <button type="button" id="btn-clear-filter">Ver todos</button>
-    </div>
+      <form id="form-recover">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <label>
+            Usuario de la cuenta
+            <input type="text" id="rec-usuario" required placeholder="Ej. dueno o nombre del trabajador" />
+          </label>
+          <label>
+            Código o palabra de seguridad del establecimiento
+            <input type="text" id="rec-codigo" required placeholder="Por defecto: PROGRESO2026" />
+          </label>
+          <label>
+            Nueva contraseña
+            <input type="password" id="rec-nueva-clave" required minlength="4" placeholder="Escribe la nueva contraseña" />
+          </label>
+        </div>
+        <button type="submit" class="btn-guardar">Restablecer contraseña</button>
+      </form>
 
-    <div class="st">Accesos directos</div>
-    <div class="qgrid">
-      <button type="button" class="qb" data-nav="nuevo"><div class="qb-ico">+</div><span>Registro bovino</span></button>
-      <button type="button" class="qb" data-nav="sanidad"><div class="qb-ico">📅</div><span>Vacuna · Fiebre Aftosa</span></button>
-      <button type="button" class="qb" data-nav="sanidad"><div class="qb-ico">💉</div><span>Sanidad</span></button>
-      <button type="button" class="qb" data-nav="sanidad"><div class="qb-ico">🛡️</div><span>Desparasitación</span></button>
-      <button type="button" class="qb" data-nav="bovinos"><div class="qb-ico">🧬</div><span>Reproducción</span></button>
-      <button type="button" class="qb" data-nav="reportes"><div class="qb-ico">📊</div><span>Reportes</span></button>
-    </div>
-
-    <div class="st">Próximos controles <small id="link-inv">Inventario completo →</small></div>
-    <div id="list1"></div>
-  </div>
-
-  <div id="v-bovinos" class="view">
-    <div class="st">Inventario del Hato <small id="link-all-inv">Mostrar todos</small></div>
-    <div id="list2"></div>
-  </div>
-
-  <div id="v-ficha" class="view">
-    <div class="res-top-bar">
-      <button type="button" class="back-link" id="btn-back">← Volver al inicio</button>
-      <button type="button" class="edit-mini-btn" id="act-edit">✏️ Editar ficha</button>
-    </div>
-    <div id="ficha"></div>
-  </div>
-
-  <div id="v-nuevo" class="view">
-    <div class="st">Nuevo Bovino</div>
-    <div class="box">
-      <div class="fg"><label>Foto del animal</label><input id="nimg" type="file" accept="image/*" capture="environment"></div>
-      <div class="fg"><label>Código / Arete *</label><input id="ncod" placeholder="Ej. 1255 o B-1255"></div>
-      <div class="fg"><label>Raza</label><select id="nraz"><option>Nelore</option><option>Brahman</option><option>Gyr</option><option>Brangus</option></select></div>
-      <div class="fg"><label>Sexo</label><select id="nsex"><option>Hembra</option><option>Macho</option></select></div>
-      <div class="fg"><label>Fecha de Nacimiento</label><input id="nnac" placeholder="15/03/2023"></div>
-      <div class="fg"><label>Edad</label><input id="neda" placeholder="2 años, 7 meses"></div>
-      <div class="fg"><label>Peso Actual (kg) *</label><input id="npes" type="number" placeholder="380"></div>
-      <div class="fg"><label>Estado</label><select id="nest"><option>Sano</option><option>Por revisar</option></select></div>
-      <button type="button" class="btn" id="btn-save-cow">Guardar Bovino</button>
+      <button type="button" class="btn-link-suave" id="btn-volver-login">
+        Volver a inicio de sesión
+      </button>
     </div>
   </div>
 
-  <div id="v-sanidad" class="view">
-    <div class="st">Calendario Sanitario</div>
-    <div class="box"><table><thead><tr><th>Arete</th><th>Control</th><th>Fecha</th></tr></thead><tbody id="san-tb"></tbody></table></div>
+  <!-- APLICACIÓN PRINCIPAL -->
+  <div id="app-shell">
+    <header class="hero-header">
+      <div class="sesion-barra">
+        <span id="info-usuario-activo">Sesión: —</span>
+        <span id="info-privacidad">🔒 Datos protegidos</span>
+      </div>
+
+      <div class="hero-top">
+        <div class="brand-box">
+          <div class="logo-circle">BS</div>
+          <div>
+            <div class="brand-title">BOVISENSE</div>
+            <div class="brand-sub">Tu ganado, en buenas manos</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="hacienda-badge" id="btn-editar-hacienda" title="Cambiar nombre del establecimiento">
+            <div>
+              <div class="hacienda-nombre" id="nombre-hacienda">Hacienda El Progreso</div>
+              <div class="hacienda-edit">✎ Establecimiento</div>
+            </div>
+            <div class="avatar-circle" id="inicial-hacienda">H</div>
+          </div>
+          <button type="button" class="btn-salir" id="btn-cerrar-sesion">Salir</button>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <span>🔍</span>
+        <input
+          type="text"
+          id="input-busqueda"
+          placeholder="Ingresa código o arete (ej. 1247) y busca..."
+        />
+        <button type="button" class="btn-limpiar" id="btn-limpiar-busqueda">Limpiar</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="aviso-app"></div>
+
+      <!-- Búsqueda rápida -->
+      <section id="bloque-busqueda" class="card" style="display: none;">
+        <div class="section-title">
+          <span>Consulta rápida por código o número</span>
+          <button type="button" class="link-accion" id="btn-cerrar-busqueda">Cerrar</button>
+        </div>
+        <div id="resultado-busqueda" class="lista-registros"></div>
+      </section>
+
+      <!-- 1. INICIO -->
+      <section id="panel-inicio" class="panel active">
+        <div class="stats-grid">
+          <div class="stat-card destacada">
+            <div>🐂</div>
+            <div class="stat-num" id="stat-total">0</div>
+            <div class="stat-label">Total bovinos</div>
+          </div>
+          <div class="stat-card">
+            <div>🐄</div>
+            <div class="stat-num" id="stat-sanos">0</div>
+            <div class="stat-label">Sanos</div>
+          </div>
+          <div class="stat-card">
+            <div>🛡️</div>
+            <div class="stat-num alerta" id="stat-revisar">0</div>
+            <div class="stat-label">Por revisar</div>
+          </div>
+          <div class="stat-card">
+            <div>☀️</div>
+            <div class="stat-num" id="stat-peso-prom">0 kg</div>
+            <div class="stat-label">Peso promedio</div>
+          </div>
+        </div>
+
+        <div class="section-title"><span>Accesos directos</span></div>
+        <div class="quick-grid">
+          <button type="button" class="quick-btn" data-ir="bovinos">
+            <span class="quick-icon">+</span>
+            <span class="quick-text">Registro bovino</span>
+          </button>
+          <button type="button" class="quick-btn" data-ir="sanidad" data-preset="Vacuna|Fiebre Aftosa">
+            <span class="quick-icon">📅</span>
+            <span class="quick-text">Vacuna · Fiebre Aftosa</span>
+          </button>
+          <button type="button" class="quick-btn" data-ir="sanidad" data-preset="Revisión|Control sanitario">
+            <span class="quick-icon">💉</span>
+            <span class="quick-text">Sanidad</span>
+          </button>
+          <button type="button" class="quick-btn" data-ir="sanidad" data-preset="Desparasitación|Desparasitación general">
+            <span class="quick-icon">🛡️</span>
+            <span class="quick-text">Desparasitación</span>
+          </button>
+          <button type="button" class="quick-btn" data-ir="reproduccion">
+            <span class="quick-icon">🧬</span>
+            <span class="quick-text">Reproducción</span>
+          </button>
+          <button type="button" class="quick-btn" data-ir="peso">
+            <span class="quick-icon">⚖️</span>
+            <span class="quick-text">Control de peso</span>
+          </button>
+        </div>
+
+        <div class="section-title">
+          <span>Próximos controles</span>
+          <button type="button" class="link-accion" data-ir="bovinos">Inventario completo →</button>
+        </div>
+        <div id="tarjeta-destacada"></div>
+      </section>
+
+      <!-- 2. REGISTRO BOVINO -->
+      <section id="panel-bovinos" class="panel">
+        <div class="card">
+          <div class="section-title"><span>Registro bovino</span></div>
+          <form id="form-bovino">
+            <div class="form-grid">
+              <label>
+                Código o número *
+                <input type="text" id="bov-codigo" required placeholder="Ej. 1247" />
+              </label>
+              <label>
+                Raza *
+                <input type="text" id="bov-raza" required placeholder="Ej. Nelore" />
+              </label>
+              <label>
+                Sexo *
+                <select id="bov-sexo" required>
+                  <option value="">Seleccionar</option>
+                  <option value="Hembra">Hembra</option>
+                  <option value="Macho">Macho</option>
+                </select>
+              </label>
+              <label>
+                Fecha de nacimiento *
+                <input type="date" id="bov-nacimiento" required />
+              </label>
+              <label>
+                Estado sanitario
+                <select id="bov-estado">
+                  <option value="Sano">Sano</option>
+                  <option value="Por revisar">Por revisar</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit" class="btn-guardar">Guardar bovino</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="section-title">
+            <span>Inventario de bovinos (<span id="cant-inventario">0</span>)</span>
+          </div>
+          <div id="lista-bovinos" class="lista-registros"></div>
+        </div>
+      </section>
+
+      <!-- 3. SANIDAD -->
+      <section id="panel-sanidad" class="panel">
+        <div class="card">
+          <div class="section-title"><span>Control sanitario</span></div>
+          <form id="form-sanidad">
+            <div class="form-grid">
+              <label>
+                Código o número *
+                <input type="text" id="san-codigo" required placeholder="Ej. 1247" />
+              </label>
+              <label>
+                Tipo de control *
+                <select id="san-tipo" required>
+                  <option value="Vacuna">Vacuna</option>
+                  <option value="Desparasitación">Desparasitación</option>
+                  <option value="Revisión">Revisión</option>
+                </select>
+              </label>
+              <label>
+                Detalle / Producto *
+                <input type="text" id="san-detalle" required placeholder="Ej. Fiebre Aftosa" />
+              </label>
+              <label>
+                Fecha *
+                <input type="date" id="san-fecha" required />
+              </label>
+            </div>
+            <button type="submit" class="btn-guardar">Guardar registro sanitario</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span>Historial sanitario</span></div>
+          <div id="lista-sanidad" class="lista-registros"></div>
+        </div>
+      </section>
+
+      <!-- 4. REPRODUCCIÓN -->
+      <section id="panel-reproduccion" class="panel">
+        <div class="card">
+          <div class="section-title"><span>Control productivo (montas, inseminación y partos)</span></div>
+          <form id="form-reproduccion">
+            <div class="form-grid">
+              <label>
+                Código o número *
+                <input type="text" id="rep-codigo" required placeholder="Ej. 1247" />
+              </label>
+              <label>
+                Evento *
+                <select id="rep-tipo" required>
+                  <option value="Monta">Monta</option>
+                  <option value="Inseminación">Inseminación</option>
+                  <option value="Parto">Parto</option>
+                </select>
+              </label>
+              <label>
+                Fecha *
+                <input type="date" id="rep-fecha" required />
+              </label>
+              <label>
+                Observación
+                <input type="text" id="rep-obs" placeholder="Ej. Toro / cría / detalle" />
+              </label>
+            </div>
+            <button type="submit" class="btn-guardar">Guardar evento productivo</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span>Historial productivo</span></div>
+          <div id="lista-reproduccion" class="lista-registros"></div>
+        </div>
+      </section>
+
+      <!-- 5. CONTROL DE PESO -->
+      <section id="panel-peso" class="panel">
+        <div class="card">
+          <div class="section-title"><span>Control de peso y crecimiento</span></div>
+          <form id="form-peso">
+            <div class="form-grid">
+              <label>
+                Código o número *
+                <input type="text" id="peso-codigo" required placeholder="Ej. 1247" />
+              </label>
+              <label>
+                Peso (kg) *
+                <input type="number" step="0.1" min="1" id="peso-valor" required placeholder="Ej. 380" />
+              </label>
+              <label>
+                Fecha *
+                <input type="date" id="peso-fecha" required />
+              </label>
+            </div>
+            <button type="submit" class="btn-guardar">Guardar peso</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span>Historial de peso y crecimiento</span></div>
+          <div id="lista-peso" class="lista-registros"></div>
+        </div>
+      </section>
+
+      <!-- 6. SEGURIDAD, TRABAJADORES, AUDITORÍA Y RESPALDOS -->
+      <section id="panel-seguridad" class="panel">
+        <div class="card" id="bloque-admin-trabajadores">
+          <div class="section-title">
+            <span>Gestión de trabajadores y permisos</span>
+          </div>
+          <form id="form-trabajador">
+            <div class="form-grid">
+              <label>
+                Nombre del trabajador *
+                <input type="text" id="trab-nombre" required placeholder="Ej. Carlos Mamani" />
+              </label>
+              <label>
+                Usuario de ingreso *
+                <input type="text" id="trab-usuario" required placeholder="Ej. cmamani" />
+              </label>
+              <label>
+                Contraseña inicial *
+                <input type="password" id="trab-clave" required minlength="4" placeholder="Mínimo 4 caracteres" />
+              </label>
+            </div>
+
+            <div class="permisos-box">
+              <label class="check-item">
+                <input type="checkbox" id="perm-bovinos" checked />
+                <span>Registrar/editar bovinos</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="perm-sanidad" checked />
+                <span>Control sanitario</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="perm-reproduccion" />
+                <span>Control productivo</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="perm-peso" checked />
+                <span>Control de peso</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" id="perm-respaldo" />
+                <span>Exportar copia de seguridad</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-guardar">Crear cuenta de trabajador</button>
+          </form>
+
+          <div style="margin-top: 14px;">
+            <div class="section-title"><span>Cuentas registradas</span></div>
+            <div id="lista-usuarios" class="lista-registros"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span>Copia de seguridad y privacidad</span></div>
+          <p class="ficha-sub" style="margin-bottom: 10px;">
+            Guarda una copia completa de tus registros del establecimiento o restaura un respaldo anterior. Solo el propietario tiene acceso irrestricto a toda la información.
+          </p>
+          <div class="acciones-fila">
+            <button type="button" class="btn-secundario" id="btn-exportar-json">Descargar copia (.json)</button>
+            <label class="btn-secundario" style="margin: 0; display: inline-flex; align-items: center; gap: 6px;">
+              <span>Restaurar copia</span>
+              <input type="file" id="input-importar-json" accept="application/json,.json" style="display: none;" />
+            </label>
+          </div>
+        </div>
+
+        <div class="card" id="bloque-auditoria">
+          <div class="section-title"><span>Registro de cambios (quién hizo qué)</span></div>
+          <div id="lista-auditoria" class="lista-registros"></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button type="button" class="nav-btn active" data-ir="inicio">
+        <span>🏠</span>
+        <span>Inicio</span>
+      </button>
+      <button type="button" class="nav-btn" data-ir="bovinos">
+        <span>🐄</span>
+        <span>Bovinos</span>
+      </button>
+      <button type="button" class="nav-plus" data-ir="bovinos" title="Nuevo bovino">+</button>
+      <button type="button" class="nav-btn" data-ir="sanidad">
+        <span>🩺</span>
+        <span>Sanidad</span>
+      </button>
+      <button type="button" class="nav-btn" data-ir="seguridad">
+        <span>🔐</span>
+        <span>Seguridad</span>
+      </button>
+    </nav>
   </div>
 
-  <div id="v-reportes" class="view">
-    <div class="st">Reportes del Hato</div>
-    <div class="box" id="rep-box"></div>
-    <button type="button" class="btn" id="btn-csv">📥 Descargar Excel (.CSV)</button>
-    <button type="button" class="btn2" id="btn-print">🖨️ Imprimir / PDF</button>
-  </div>
+  <script>
+    const DB_KEY = "bovisense_seguro_v3";
+    const SESION_KEY = "bovisense_sesion_v3";
 
-  <nav>
-    <button type="button" class="ni active" id="n-inicio" data-nav="inicio"><span>🏠</span>Inicio</button>
-    <button type="button" class="ni" id="n-bovinos" data-nav="bovinos"><span>🐄</span>Bovinos</button>
-    <button type="button" class="add-fab" data-nav="nuevo">+</button>
-    <button type="button" class="ni" id="n-sanidad" data-nav="sanidad"><span>🩺</span>Sanidad</button>
-    <button type="button" class="ni" id="n-reportes" data-nav="reportes"><span>📋</span>Reportes</button>
-  </nav>
-</div>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0C3B24">
+    const estadoBase = {
+      hacienda: "Hacienda El Progreso",
+      codigoRecuperacion: "PROGRESO2026",
+      usuarios: [
+        {
+          id: "owner-1",
+          nombre: "Propietario",
+          usuario: "dueno",
+          clave: "bovi2026",
+          rol: "admin",
+          activo: true,
+          permisos: {
+            bovinos: true,
+            sanidad: true,
+            reproduccion: true,
+            peso: true,
+            respaldo: true
+          }
+        }
+      ],
+      bovinos: [
+        {
+          codigo: "1247",
+          raza: "Nelore",
+          sexo: "Hembra",
+          nacimiento: "2023-05-10",
+          estado: "Sano"
+        }
+      ],
+      sanidad: [],
+      reproduccion: [],
+      pesos: [
+        {
+          codigo: "1247",
+          peso: 380,
+          fecha: "2026-10-15"
+        }
+      ],
+      auditoria: []
+    };
 
-<script>
-var farm = "Hacienda El Progreso";
-var ftab = "san";
-var tmpImg = "";
-var statusFilter = "all";
-
-var db = [
-  {
-    c: "1247", r: "Nelore", s: "Hembra", p: 380, e: "Sano", img: "",
-    nac: "15/03/2023", edad: "2 años, 7 meses",
-    px: "Fiebre Aftosa · 10/11/2025",
-    vet: "Revisión veterinaria · Chequeo general · 20/02/2026",
-    san: [
-      { f: "10/04/2025 · Vacuna", t: "Fiebre Aftosa", p: "10/11/2025" },
-      { f: "15/06/2025 · Desparasitación", t: "Próxima", p: "10/11/2025" },
-      { f: "15/06/2025 · Desparasitación", t: "Ivermectina", p: "15/12/2025" },
-      { f: "20/06/2025 · Desparasitación", t: "Próxima", p: "15/12/2025" },
-      { f: "20/08/2025 · Revisión veterinaria", t: "Chequeo general", p: "20/02/2026" },
-      { f: "20/08/2025 · Chequeo", t: "Próxima general", p: "20/02/2026" }
-    ],
-    rep: [
-      { f: "18/07/2025 · Diagnóstico", t: "Gestación: Preñada", p: "15/04/2026" }
-    ],
-    pes: [
-      { f: "20/08/2025 · Control corral", t: "380 kg", p: "+18 kg" }
-    ]
-  },
-  {
-    c: "1248", r: "Nelore", s: "Macho", p: 520, e: "Sano", img: "",
-    nac: "10/01/2023", edad: "2 años, 9 meses",
-    px: "Desparasitación · 15/12/2026",
-    vet: "Evaluación andrológica programada",
-    san: [
-      { f: "15/06/2025 · Desparasitación", t: "Ivermectina 3.15%", p: "15/12/2026" }
-    ],
-    rep: [
-      { f: "01/03/2025 · Andrología", t: "Reproductor Apto", p: "01/03/2026" }
-    ],
-    pes: [
-      { f: "10/08/2025 · Potrero norte", t: "520 kg", p: "+25 kg" }
-    ]
-  },
-  {
-    c: "1250", r: "Brahman", s: "Hembra", p: 410, e: "Por revisar", img: "",
-    nac: "02/05/2023", edad: "2 años, 5 meses",
-    px: "Revisión vet. · Urgente",
-    vet: "Chequeo de ganancia de peso",
-    san: [
-      { f: "05/09/2025 · Control sanitario", t: "Ganancia de peso", p: "Pendiente" }
-    ],
-    rep: [
-      { f: "10/04/2025 · Parto natural", t: "Cría 34 kg", p: "Observación" }
-    ],
-    pes: [
-      { f: "05/09/2025 · Observación", t: "410 kg", p: "-5 kg" }
-    ]
-  }
-];
-
-try {
-  if (localStorage.bv_db_v6) db = JSON.parse(localStorage.bv_db_v6);
-  if (localStorage.bv_fm_v6) farm = localStorage.bv_fm_v6;
-} catch (e) {}
-
-function save() {
-  try {
-    localStorage.bv_db_v6 = JSON.stringify(db);
-    localStorage.bv_fm_v6 = farm;
-  } catch (e) {}
-}
-
-function editFarm() {
-  var n = prompt("Nombre de Hacienda o Propietario:", farm);
-  if (n && n.trim()) {
-    farm = n.trim();
-    save();
-    render();
-  }
-}
-
-function setFilter(st) {
-  statusFilter = (statusFilter === st && st !== "all") ? "all" : st;
-  document.querySelectorAll(".mc").forEach(function (el) { el.classList.remove("active-kpi"); });
-  var el = document.getElementById(statusFilter === "Por revisar" ? "kpi-Por-revisar" : "kpi-" + statusFilter);
-  if (el) el.classList.add("active-kpi");
-  var bar = document.getElementById("filter-bar");
-  if (bar) {
-    if (statusFilter === "all") {
-      bar.classList.remove("show");
-    } else {
-      bar.classList.add("show");
-      var l = document.getElementById("filter-label");
-      if (l) l.textContent = "Filtrando por estado: " + statusFilter;
+    function cargarDB() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (!raw) return structuredClone(estadoBase);
+        const p = JSON.parse(raw);
+        return {
+          hacienda: p.hacienda || "Hacienda El Progreso",
+          codigoRecuperacion: p.codigoRecuperacion || "PROGRESO2026",
+          usuarios: Array.isArray(p.usuarios) && p.usuarios.length ? p.usuarios : structuredClone(estadoBase.usuarios),
+          bovinos: Array.isArray(p.bovinos) ? p.bovinos : [],
+          sanidad: Array.isArray(p.sanidad) ? p.sanidad : [],
+          reproduccion: Array.isArray(p.reproduccion) ? p.reproduccion : [],
+          pesos: Array.isArray(p.pesos) ? p.pesos : [],
+          auditoria: Array.isArray(p.auditoria) ? p.auditoria : []
+        };
+      } catch {
+        return structuredClone(estadoBase);
+      }
     }
-  }
-  render();
-}
 
-function go(v) {
-  document.querySelectorAll(".view").forEach(function (x) { x.classList.remove("active"); });
-  var tv = document.getElementById("v-" + v);
-  if (tv) tv.classList.add("active");
-  document.querySelectorAll(".ni").forEach(function (x) { x.classList.remove("active"); });
-  var nb = document.getElementById("n-" + v);
-  if (nb) nb.classList.add("active");
-  var sb = document.getElementById("main-sbox");
-  if (sb) {
-    if (v === "ficha") sb.classList.add("hidden");
-    else sb.classList.remove("hidden");
-  }
-  render();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
+    let db = cargarDB();
+    let usuarioActualId = localStorage.getItem(SESION_KEY) || null;
 
-function readFileImg(ev, cb) {
-  var inp = ev.target;
-  var f = inp && inp.files ? inp.files[0] : null;
-  if (!f) return;
-  var r = new FileReader();
-  r.onload = function () {
-    if (typeof r.result === "string") cb(r.result);
-  };
-  r.readAsDataURL(f);
-}
+    function guardarDB() {
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+    }
 
-function addCow() {
-  var cEl = document.getElementById("ncod");
-  var rEl = document.getElementById("nraz");
-  var sEl = document.getElementById("nsex");
-  var nacEl = document.getElementById("nnac");
-  var edaEl = document.getElementById("neda");
-  var pEl = document.getElementById("npes");
-  var eEl = document.getElementById("nest");
-  var c = cEl ? cEl.value.trim().toUpperCase() : "";
-  var r = rEl ? rEl.value : "Nelore";
-  var s = sEl ? sEl.value : "Hembra";
-  var nac = (nacEl && nacEl.value.trim()) || "15/03/2023";
-  var edad = (edaEl && edaEl.value.trim()) || "2 años, 7 meses";
-  var p = pEl ? Number(pEl.value) : 0;
-  var e = eEl ? eEl.value : "Sano";
-  if (!c || !p) {
-    alert("Completa Código / Arete y Peso Actual.");
-    return;
-  }
-  db.unshift({
-    c: c, r: r, s: s, p: p, e: e, nac: nac, edad: edad, img: tmpImg,
-    px: e === "Por revisar" ? "Revisión vet. · Urgente" : "Vacuna preventiva",
-    vet: "Chequeo de ingreso",
-    san: [{ f: "10/04/2025 · Registro", t: "Control inicial", p: "Pendiente" }],
-    rep: [],
-    pes: [{ f: "20/08/2025 · Registro", t: p + " kg", p: "Base" }]
-  });
-  tmpImg = "";
-  save();
-  setFilter("all");
-  go("inicio");
-}
+    function obtenerUsuarioActual() {
+      if (!usuarioActualId) return null;
+      const u = db.usuarios.find((x) => x.id === usuarioActualId);
+      if (!u || !u.activo) return null;
+      return u;
+    }
 
-function renderHistTable(i) {
-  var x = db[i];
-  var box = document.getElementById("hist-box");
-  if (!x || !box) return;
-  var headA = "Sanitario";
-  var headB = "Detalle";
-  var headC = "Próxima";
-  var rows = [];
-  if (ftab === "san") {
-    rows = x.san.map(function (m) {
-      return "<tr><td>" + m.f + "</td><td>" + m.t + "</td><td>" + (m.p || "—") + "</td></tr>";
+    function esAdmin(u) {
+      return u && u.rol === "admin";
+    }
+
+    function tienePermiso(permiso) {
+      const u = obtenerUsuarioActual();
+      if (!u || !u.activo) return false;
+      if (u.rol === "admin") return true;
+      return Boolean(u.permisos && u.permisos[permiso]);
+    }
+
+    function registrarAuditoria(accion, detalle) {
+      const u = obtenerUsuarioActual();
+      const actor = u ? `${u.nombre} (${u.usuario})` : "Sistema";
+      const ahora = new Date().toLocaleString("es-BO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      db.auditoria.unshift({
+        fecha: ahora,
+        actor,
+        rol: u ? u.rol : "sistema",
+        accion,
+        detalle
+      });
+      if (db.auditoria.length > 200) {
+        db.auditoria = db.auditoria.slice(0, 200);
+      }
+    }
+
+    function mostrarAvisoApp(texto, tipo = "ok") {
+      const el = document.getElementById("aviso-app");
+      el.innerHTML = `<div class="${tipo === "error" ? "mensaje-alerta" : "mensaje-ok"}">${texto}</div>`;
+      setTimeout(() => {
+        el.innerHTML = "";
+      }, 3600);
+    }
+
+    function sincronizarAccesoUI() {
+      const u = obtenerUsuarioActual();
+      const authScreen = document.getElementById("auth-screen");
+      const appShell = document.getElementById("app-shell");
+
+      if (!u) {
+        authScreen.style.display = "flex";
+        appShell.style.display = "none";
+        return;
+      }
+
+      authScreen.style.display = "none";
+      appShell.style.display = "block";
+
+      document.getElementById("info-usuario-activo").textContent =
+        `Usuario: ${u.nombre} (${u.rol === "admin" ? "Propietario / Admin" : "Trabajador"})`;
+      document.getElementById("info-privacidad").textContent =
+        u.rol === "admin" ? "🔓 Acceso total del dueño" : "🔒 Acceso restringido por permisos";
+
+      document.getElementById("bloque-admin-trabajadores").style.display = esAdmin(u) ? "block" : "none";
+      document.getElementById("bloque-auditoria").style.display = esAdmin(u) ? "block" : "none";
+    }
+
+    // Login y recuperación
+    document.getElementById("btn-ir-recuperar").addEventListener("click", () => {
+      document.getElementById("login-box").style.display = "none";
+      document.getElementById("recover-box").style.display = "block";
+      document.getElementById("recover-feedback").innerHTML = "";
     });
-  } else if (ftab === "rep") {
-    headA = "Reproductivo";
-    headB = "Evento";
-    headC = "Seguimiento";
-    rows = x.rep.length
-      ? x.rep.map(function (m) {
-          return "<tr><td>" + m.f + "</td><td>" + m.t + "</td><td>" + (m.p || "—") + "</td></tr>";
+
+    document.getElementById("btn-volver-login").addEventListener("click", () => {
+      document.getElementById("recover-box").style.display = "none";
+      document.getElementById("login-box").style.display = "block";
+      document.getElementById("auth-feedback").innerHTML = "";
+    });
+
+    document.getElementById("form-login").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById("login-usuario").value.trim().toLowerCase();
+      const clave = document.getElementById("login-clave").value;
+      const fb = document.getElementById("auth-feedback");
+
+      const encontrado = db.usuarios.find(
+        (u) => u.usuario.toLowerCase() === usuario && u.clave === clave
+      );
+
+      if (!encontrado) {
+        fb.innerHTML = `<div class="mensaje-alerta">Usuario o contraseña incorrectos.</div>`;
+        return;
+      }
+
+      if (!encontrado.activo) {
+        fb.innerHTML = `<div class="mensaje-alerta">Esta cuenta está desactivada por el administrador.</div>`;
+        return;
+      }
+
+      usuarioActualId = encontrado.id;
+      localStorage.setItem(SESION_KEY, encontrado.id);
+      registrarAuditoria("Inicio de sesión", `Ingreso de ${encontrado.nombre}`);
+      guardarDB();
+      e.target.reset();
+      sincronizarAccesoUI();
+      cambiarVista("inicio");
+    });
+
+    document.getElementById("form-recover").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById("rec-usuario").value.trim().toLowerCase();
+      const codigo = document.getElementById("rec-codigo").value.trim();
+      const nuevaClave = document.getElementById("rec-nueva-clave").value;
+      const fb = document.getElementById("recover-feedback");
+
+      if (codigo !== db.codigoRecuperacion) {
+        fb.innerHTML = `<div class="mensaje-alerta">El código de seguridad del establecimiento no coincide.</div>`;
+        return;
+      }
+
+      const idx = db.usuarios.findIndex((u) => u.usuario.toLowerCase() === usuario);
+      if (idx === -1) {
+        fb.innerHTML = `<div class="mensaje-alerta">No existe ningún usuario con ese nombre.</div>`;
+        return;
+      }
+
+      db.usuarios[idx].clave = nuevaClave;
+      registrarAuditoria("Recuperación de contraseña", `Se restableció la clave de ${db.usuarios[idx].usuario}`);
+      guardarDB();
+      e.target.reset();
+      fb.innerHTML = `<div class="mensaje-ok">Contraseña actualizada. Ya puedes iniciar sesión.</div>`;
+    });
+
+    document.getElementById("btn-cerrar-sesion").addEventListener("click", () => {
+      const u = obtenerUsuarioActual();
+      if (u) {
+        registrarAuditoria("Cierre de sesión", `Salió ${u.nombre}`);
+        guardarDB();
+      }
+      usuarioActualId = null;
+      localStorage.removeItem(SESION_KEY);
+      sincronizarAccesoUI();
+    });
+
+    function calcularEdad(fechaStr) {
+      if (!fechaStr) return "Sin fecha";
+      const nac = new Date(fechaStr + "T00:00:00");
+      if (Number.isNaN(nac.getTime())) return fechaStr;
+      const hoy = new Date();
+      let meses = (hoy.getFullYear() - nac.getFullYear()) * 12 + (hoy.getMonth() - nac.getMonth());
+      if (hoy.getDate() < nac.getDate()) meses--;
+      if (meses < 0) meses = 0;
+      if (meses < 12) return `${meses} meses`;
+      const años = Math.floor(meses / 12);
+      const rest = meses % 12;
+      return rest > 0 ? `${años}a ${rest}m` : `${años}a`;
+    }
+
+    function ultimoPesoDe(codigo) {
+      const reg = db.pesos.find((p) => p.codigo.toLowerCase() === codigo.toLowerCase());
+      return reg ? `${reg.peso} kg` : "Sin peso";
+    }
+
+    function cambiarVista(vista, presetSanidad) {
+      const mapa = {
+        inicio: "panel-inicio",
+        bovinos: "panel-bovinos",
+        sanidad: "panel-sanidad",
+        reproduccion: "panel-reproduccion",
+        peso: "panel-peso",
+        seguridad: "panel-seguridad"
+      };
+
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      const targetId = mapa[vista] || "panel-inicio";
+      document.getElementById(targetId).classList.add("active");
+
+      document.querySelectorAll(".bottom-nav .nav-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.ir === vista);
+      });
+
+      if (vista === "sanidad" && presetSanidad) {
+        const [tipo, detalle] = presetSanidad.split("|");
+        if (tipo) document.getElementById("san-tipo").value = tipo;
+        if (detalle) document.getElementById("san-detalle").value = detalle;
+      }
+
+      renderTodo();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-ir]").forEach((el) => {
+      el.addEventListener("click", () => {
+        cambiarVista(el.dataset.ir, el.dataset.preset || "");
+      });
+    });
+
+    document.getElementById("btn-editar-hacienda").addEventListener("click", () => {
+      if (!esAdmin(obtenerUsuarioActual())) {
+        mostrarAvisoApp("Solo el propietario puede cambiar el nombre del establecimiento.", "error");
+        return;
+      }
+      const nuevo = prompt("Nombre del establecimiento:", db.hacienda);
+      if (nuevo && nuevo.trim()) {
+        const anterior = db.hacienda;
+        db.hacienda = nuevo.trim();
+        registrarAuditoria("Cambio de establecimiento", `De "${anterior}" a "${db.hacienda}"`);
+        guardarDB();
+        renderTodo();
+      }
+    });
+
+    // Registro bovino
+    document.getElementById("form-bovino").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!tienePermiso("bovinos")) {
+        mostrarAvisoApp("No tienes permiso para registrar o editar bovinos.", "error");
+        return;
+      }
+      const codigo = document.getElementById("bov-codigo").value.trim();
+      const raza = document.getElementById("bov-raza").value.trim();
+      const sexo = document.getElementById("bov-sexo").value;
+      const nacimiento = document.getElementById("bov-nacimiento").value;
+      const estado = document.getElementById("bov-estado").value;
+
+      if (!codigo || !raza || !sexo || !nacimiento) return;
+
+      const item = { codigo, raza, sexo, nacimiento, estado };
+      const idx = db.bovinos.findIndex((b) => b.codigo.toLowerCase() === codigo.toLowerCase());
+      if (idx >= 0) {
+        db.bovinos[idx] = item;
+        registrarAuditoria("Actualizó bovino", `Código ${codigo} (${raza}, ${estado})`);
+      } else {
+        db.bovinos.unshift(item);
+        registrarAuditoria("Registró bovino", `Código ${codigo} (${raza}, ${sexo})`);
+      }
+
+      guardarDB();
+      e.target.reset();
+      mostrarAvisoApp("Registro bovino guardado.");
+      renderTodo();
+    });
+
+    // Sanidad
+    document.getElementById("form-sanidad").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!tienePermiso("sanidad")) {
+        mostrarAvisoApp("No tienes permiso para registrar controles sanitarios.", "error");
+        return;
+      }
+      const codigo = document.getElementById("san-codigo").value.trim();
+      const tipo = document.getElementById("san-tipo").value;
+      const detalle = document.getElementById("san-detalle").value.trim();
+      const fecha = document.getElementById("san-fecha").value;
+
+      db.sanidad.unshift({ codigo, tipo, detalle, fecha });
+      registrarAuditoria("Control sanitario", `${codigo} · ${tipo}: ${detalle} (${fecha})`);
+      guardarDB();
+      e.target.reset();
+      mostrarAvisoApp("Registro sanitario guardado.");
+      renderTodo();
+    });
+
+    // Reproducción
+    document.getElementById("form-reproduccion").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!tienePermiso("reproduccion")) {
+        mostrarAvisoApp("No tienes permiso para registrar eventos productivos.", "error");
+        return;
+      }
+      const codigo = document.getElementById("rep-codigo").value.trim();
+      const tipo = document.getElementById("rep-tipo").value;
+      const fecha = document.getElementById("rep-fecha").value;
+      const obs = document.getElementById("rep-obs").value.trim();
+
+      db.reproduccion.unshift({ codigo, tipo, fecha, obs });
+      registrarAuditoria("Control productivo", `${codigo} · ${tipo} (${fecha})`);
+      guardarDB();
+      e.target.reset();
+      mostrarAvisoApp("Evento productivo guardado.");
+      renderTodo();
+    });
+
+    // Peso
+    document.getElementById("form-peso").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!tienePermiso("peso")) {
+        mostrarAvisoApp("No tienes permiso para registrar pesos.", "error");
+        return;
+      }
+      const codigo = document.getElementById("peso-codigo").value.trim();
+      const peso = parseFloat(document.getElementById("peso-valor").value);
+      const fecha = document.getElementById("peso-fecha").value;
+      if (!codigo || Number.isNaN(peso) || !fecha) return;
+
+      db.pesos.unshift({ codigo, peso, fecha });
+      registrarAuditoria("Control de peso", `${codigo} · ${peso} kg (${fecha})`);
+      guardarDB();
+      e.target.reset();
+      mostrarAvisoApp("Peso guardado.");
+      renderTodo();
+    });
+
+    // Gestión de trabajadores (solo admin)
+    document.getElementById("form-trabajador").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!esAdmin(obtenerUsuarioActual())) return;
+
+      const nombre = document.getElementById("trab-nombre").value.trim();
+      const usuario = document.getElementById("trab-usuario").value.trim().toLowerCase();
+      const clave = document.getElementById("trab-clave").value;
+
+      if (db.usuarios.some((u) => u.usuario.toLowerCase() === usuario)) {
+        mostrarAvisoApp("Ese nombre de usuario ya existe.", "error");
+        return;
+      }
+
+      const permisos = {
+        bovinos: document.getElementById("perm-bovinos").checked,
+        sanidad: document.getElementById("perm-sanidad").checked,
+        reproduccion: document.getElementById("perm-reproduccion").checked,
+        peso: document.getElementById("perm-peso").checked,
+        respaldo: document.getElementById("perm-respaldo").checked
+      };
+
+      db.usuarios.push({
+        id: "trab-" + Date.now(),
+        nombre,
+        usuario,
+        clave,
+        rol: "trabajador",
+        activo: true,
+        permisos
+      });
+
+      registrarAuditoria("Creó trabajador", `${nombre} (usuario: ${usuario})`);
+      guardarDB();
+      e.target.reset();
+      document.getElementById("perm-bovinos").checked = true;
+      document.getElementById("perm-sanidad").checked = true;
+      document.getElementById("perm-peso").checked = true;
+      mostrarAvisoApp("Cuenta de trabajador creada.");
+      renderTodo();
+    });
+
+    window.alternarEstadoTrabajador = function (id) {
+      if (!esAdmin(obtenerUsuarioActual())) return;
+      const u = db.usuarios.find((x) => x.id === id && x.rol !== "admin");
+      if (!u) return;
+      u.activo = !u.activo;
+      registrarAuditoria(
+        u.activo ? "Activó trabajador" : "Desactivó trabajador",
+        `${u.nombre} (${u.usuario})`
+      );
+      guardarDB();
+      renderTodo();
+    };
+
+    window.editarPermisosTrabajador = function (id) {
+      if (!esAdmin(obtenerUsuarioActual())) return;
+      const u = db.usuarios.find((x) => x.id === id && x.rol !== "admin");
+      if (!u) return;
+
+      const actualBov = u.permisos.bovinos ? "1" : "0";
+      const actualSan = u.permisos.sanidad ? "1" : "0";
+      const actualRep = u.permisos.reproduccion ? "1" : "0";
+      const actualPeso = u.permisos.peso ? "1" : "0";
+
+      const res = prompt(
+        `Permisos para ${u.nombre} (1 = permitido, 0 = bloqueado) en orden: Bovinos,Sanidad,Reproducción,Peso`,
+        `${actualBov},${actualSan},${actualRep},${actualPeso}`
+      );
+      if (!res) return;
+
+      const partes = res.split(",").map((s) => s.trim());
+      if (partes.length < 4) {
+        mostrarAvisoApp("Usa el formato 1,1,0,1 para actualizar permisos.", "error");
+        return;
+      }
+
+      u.permisos.bovinos = partes[0] === "1";
+      u.permisos.sanidad = partes[1] === "1";
+      u.permisos.reproduccion = partes[2] === "1";
+      u.permisos.peso = partes[3] === "1";
+
+      registrarAuditoria("Modificó permisos", `Trabajador ${u.usuario}`);
+      guardarDB();
+      mostrarAvisoApp("Permisos actualizados.");
+      renderTodo();
+    };
+
+    // Copia de seguridad JSON
+    document.getElementById("btn-exportar-json").addEventListener("click", () => {
+      if (!tienePermiso("respaldo")) {
+        mostrarAvisoApp("No tienes permiso para exportar copias de seguridad.", "error");
+        return;
+      }
+      const copia = {
+        app: "BOVISENSE",
+        exportadoEn: new Date().toISOString(),
+        datos: db
+      };
+      const blob = new Blob([JSON.stringify(copia, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bovisense-respaldo-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      registrarAuditoria("Exportó copia de seguridad", "Descarga de archivo .json");
+      guardarDB();
+      renderTodo();
+      mostrarAvisoApp("Copia de seguridad descargada.");
+    });
+
+    document.getElementById("input-importar-json").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!esAdmin(obtenerUsuarioActual())) {
+        mostrarAvisoApp("Solo el propietario puede restaurar copias de seguridad.", "error");
+        e.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          const payload = parsed.datos || parsed;
+          if (!Array.isArray(payload.bovinos)) {
+            throw new Error("Formato inválido");
+          }
+          db = {
+            hacienda: payload.hacienda || db.hacienda,
+            codigoRecuperacion: payload.codigoRecuperacion || db.codigoRecuperacion,
+            usuarios: Array.isArray(payload.usuarios) && payload.usuarios.length ? payload.usuarios : db.usuarios,
+            bovinos: payload.bovinos || [],
+            sanidad: Array.isArray(payload.sanidad) ? payload.sanidad : [],
+            reproduccion: Array.isArray(payload.reproduccion) ? payload.reproduccion : [],
+            pesos: Array.isArray(payload.pesos) ? payload.pesos : [],
+            auditoria: Array.isArray(payload.auditoria) ? payload.auditoria : []
+          };
+          registrarAuditoria("Restauró copia de seguridad", `Archivo: ${file.name}`);
+          guardarDB();
+          renderTodo();
+          mostrarAvisoApp("Copia de seguridad restaurada correctamente.");
+        } catch {
+          mostrarAvisoApp("No se pudo leer el archivo de copia de seguridad.", "error");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    function variacionPeso(item, index) {
+      const previos = db.pesos
+        .slice(index + 1)
+        .filter((p) => p.codigo.toLowerCase() === item.codigo.toLowerCase());
+      if (!previos.length) return "Primer registro";
+      const diff = (item.peso - previos[0].peso).toFixed(1);
+      return diff >= 0 ? `+${diff} kg` : `${diff} kg`;
+    }
+
+    function renderTodo() {
+      const u = obtenerUsuarioActual();
+      if (!u) return;
+
+      document.getElementById("nombre-hacienda").textContent = db.hacienda;
+      document.getElementById("inicial-hacienda").textContent = (db.hacienda[0] || "B").toUpperCase();
+
+      const total = db.bovinos.length;
+      const sanos = db.bovinos.filter((b) => b.estado === "Sano").length;
+      const revisar = db.bovinos.filter((b) => b.estado === "Por revisar").length;
+      const promPeso = db.pesos.length
+        ? (db.pesos.reduce((acc, p) => acc + p.peso, 0) / db.pesos.length).toFixed(0) + " kg"
+        : "0 kg";
+
+      document.getElementById("stat-total").textContent = total;
+      document.getElementById("stat-sanos").textContent = sanos;
+      document.getElementById("stat-revisar").textContent = revisar;
+      document.getElementById("stat-peso-prom").textContent = promPeso;
+      document.getElementById("cant-inventario").textContent = total;
+
+      const destCont = document.getElementById("tarjeta-destacada");
+      const principal = db.bovinos[0];
+      if (principal) {
+        const pTexto = ultimoPesoDe(principal.codigo);
+        destCont.innerHTML = `
+          <div class="card">
+            <div class="ficha-bovino">
+              <div class="ficha-izq">
+                <div class="ficha-thumb">🐄</div>
+                <div>
+                  <div class="ficha-sub">Identificación</div>
+                  <div class="ficha-codigo">${principal.codigo}</div>
+                  <div class="ficha-meta">${principal.raza} · ${principal.sexo}${pTexto !== "Sin peso" ? ` · ${pTexto}` : ""}</div>
+                  <div class="ficha-sub">Raza: ${principal.raza} · Edad: ${calcularEdad(principal.nacimiento)}</div>
+                  <div class="ficha-sub">Sexo: ${principal.sexo} · Estado: ${principal.estado}</div>
+                </div>
+              </div>
+              <div>
+                <div class="badge-bovino">BOVINO</div>
+                ${pTexto !== "Sin peso" ? `<div class="peso-destacado">${pTexto}</div>` : ""}
+              </div>
+            </div>
+          </div>`;
+      } else {
+        destCont.innerHTML = `
+          <div class="card">
+            <p class="vacio">Aún no hay bovinos registrados. Toca <strong>Registro bovino</strong> o el botón <strong>+</strong> para agregar el primero.</p>
+          </div>`;
+      }
+
+      document.getElementById("lista-bovinos").innerHTML = db.bovinos.length
+        ? db.bovinos
+            .map(
+              (b) => `
+              <div class="fila-registro">
+                <div>
+                  <div class="fila-titulo">${b.codigo} — ${b.raza} (${b.sexo})</div>
+                  <div class="fila-detalle">Nac.: ${b.nacimiento} · Edad: ${calcularEdad(b.nacimiento)} · Peso: ${ultimoPesoDe(b.codigo)}</div>
+                </div>
+                <span class="chip">${b.estado}</span>
+              </div>`
+            )
+            .join("")
+        : `<p class="vacio">Sin animales registrados todavía.</p>`;
+
+      document.getElementById("lista-sanidad").innerHTML = db.sanidad.length
+        ? db.sanidad
+            .map(
+              (s) => `
+              <div class="fila-registro">
+                <div>
+                  <div class="fila-titulo">${s.codigo} · ${s.tipo}: ${s.detalle}</div>
+                  <div class="fila-detalle">Fecha: ${s.fecha}</div>
+                </div>
+                <span class="chip">${s.tipo}</span>
+              </div>`
+            )
+            .join("")
+        : `<p class="vacio">Sin registros sanitarios.</p>`;
+
+      document.getElementById("lista-reproduccion").innerHTML = db.reproduccion.length
+        ? db.reproduccion
+            .map(
+              (r) => `
+              <div class="fila-registro">
+                <div>
+                  <div class="fila-titulo">${r.codigo} · ${r.tipo}</div>
+                  <div class="fila-detalle">Fecha: ${r.fecha}${r.obs ? ` · ${r.obs}` : ""}</div>
+                </div>
+                <span class="chip">${r.tipo}</span>
+              </div>`
+            )
+            .join("")
+        : `<p class="vacio">Sin eventos productivos registrados.</p>`;
+
+      document.getElementById("lista-peso").innerHTML = db.pesos.length
+        ? db.pesos
+            .map(
+              (p, i) => `
+              <div class="fila-registro">
+                <div>
+                  <div class="fila-titulo">${p.codigo} · ${p.peso} kg</div>
+                  <div class="fila-detalle">Fecha: ${p.fecha} · Crecimiento: ${variacionPeso(p, i)}</div>
+                </div>
+                <span class="chip">${variacionPeso(p, i)}</span>
+              </div>`
+            )
+            .join("")
+        : `<p class="vacio">Sin registros de peso.</p>`;
+
+      // Usuarios (admin)
+      const listUsers = document.getElementById("lista-usuarios");
+      listUsers.innerHTML = db.usuarios
+        .map((usr) => {
+          const resumenPerm =
+            usr.rol === "admin"
+              ? "Todos los permisos (Propietario)"
+              : `Bov:${usr.permisos.bovinos ? "Sí" : "No"} · San:${usr.permisos.sanidad ? "Sí" : "No"} · Rep:${usr.permisos.reproduccion ? "Sí" : "No"} · Peso:${usr.permisos.peso ? "Sí" : "No"}`;
+
+          const botonesAdmin =
+            usr.rol !== "admin"
+              ? `<div class="acciones-fila">
+                  <button type="button" class="btn-secundario" onclick="editarPermisosTrabajador('${usr.id}')">Permisos</button>
+                  <button type="button" class="btn-peligro" onclick="alternarEstadoTrabajador('${usr.id}')">${usr.activo ? "Desactivar" : "Activar"}</button>
+                </div>`
+              : `<span class="chip">Dueño</span>`;
+
+          return `
+            <div class="fila-registro">
+              <div>
+                <div class="fila-titulo">${usr.nombre} (@${usr.usuario})</div>
+                <div class="fila-detalle">${resumenPerm}</div>
+              </div>
+              <div class="acciones-fila">
+                <span class="chip ${usr.activo ? "" : "inactivo"}">${usr.activo ? "Activo" : "Desactivado"}</span>
+                ${botonesAdmin}
+              </div>
+            </div>`;
         })
-      : ["<tr><td colspan=\"3\" style=\"color:var(--g)\">Sin registros reproductivos.</td></tr>"];
-  } else {
-    headA = "Control Peso";
-    headB = "Peso";
-    headC = "Nota";
-    rows = x.pes.map(function (m) {
-      return "<tr><td>" + m.f + "</td><td><b>" + m.t + "</b></td><td>" + (m.p || "—") + "</td></tr>";
-    });
-  }
-  box.innerHTML =
-    "<div class=\"hist-table-wrap\"><table class=\"hist-table\"><thead><tr><th>" +
-    headA + "</th><th>" + headB + "</th><th>" + headC +
-    "</th></tr></thead><tbody>" + rows.join("") + "</tbody></table></div>";
-}
+        .join("");
 
-function openCow(i) {
-  ftab = "san";
-  var x = db[i];
-  var fichaEl = document.getElementById("ficha");
-  if (!x || !fichaEl) return;
+      // Auditoría (admin)
+      const listAud = document.getElementById("lista-auditoria");
+      listAud.innerHTML = db.auditoria.length
+        ? db.auditoria
+            .map(
+              (a) => `
+              <div class="fila-registro">
+                <div>
+                  <div class="fila-titulo">${a.actor} — ${a.accion}</div>
+                  <div class="fila-detalle">${a.detalle} · ${a.fecha}</div>
+                </div>
+                <span class="chip">${a.rol === "admin" ? "Admin" : "Trabajador"}</span>
+              </div>`
+            )
+            .join("")
+        : `<p class="vacio">Aún no hay movimientos registrados en la auditoría.</p>`;
 
-  var photoHtml = x.img ? ("<img src=\"" + x.img + "\" alt=\"" + x.c + "\">") : "🐄";
-  var sexSign = x.s === "Macho" ? "♂" : "♀";
-  var razaOpts = ["Nelore", "Brahman", "Gyr", "Brangus"].map(function (rz) {
-    return "<option" + (x.r === rz ? " selected" : "") + ">" + rz + "</option>";
-  }).join("");
-
-  fichaEl.innerHTML =
-    "<div class=\"hero-card\">" +
-      "<label class=\"hero-photo\">" + photoHtml +
-        "<span class=\"av-cam\">📷</span>" +
-        "<input id=\"f-cam-inp\" type=\"file\" accept=\"image/*\" capture=\"environment\" style=\"display:none\">" +
-      "</label>" +
-      "<div class=\"hero-body\">" +
-        "<div class=\"hero-sub-lbl\">Codigo / " + x.r + "</div>" +
-        "<div class=\"hero-code-row\"><span class=\"badge-bov\">BOVINO</span><span class=\"hero-code\">" + x.c + "</span></div>" +
-        "<div class=\"hero-rows\">" +
-          "<div class=\"hero-r\"><span>👤 " + x.r + "</span><span>Nacimiento</span><b>" + x.nac + "</b></div>" +
-          "<div class=\"hero-r\"><span>🐄 " + x.s + "</span><b>" + x.nac + "</b></div>" +
-          "<div class=\"hero-r\"><span>" + sexSign + " Peso</span><b>" + x.p + " kg</b></div>" +
-        "</div>" +
-      "</div>" +
-    "</div>" +
-    "<div class=\"info-2x2\">" +
-      "<div class=\"info-tile\"><div class=\"it-title\">Raza " + x.r + "</div><div class=\"it-line\">💊 Sexo " + x.s + "</div><div class=\"it-line\">📋 Edad " + x.edad + "</div></div>" +
-      "<div class=\"info-tile\"><div class=\"it-title\">Sexo " + x.s + "</div><div class=\"it-line\">Nacimiento " + x.nac + "</div><div class=\"it-line\">Peso actual " + x.p + " kg</div></div>" +
-    "</div>" +
-    "<div class=\"pill-tabs\">" +
-      "<button type=\"button\" class=\"ptab active\" id=\"ptab-san\">+ Sanitario</button>" +
-      "<button type=\"button\" class=\"ptab\" id=\"ptab-rep\">🧬 Reproductivo</button>" +
-      "<button type=\"button\" class=\"ptab\" id=\"ptab-pes\">⚖️ Peso</button>" +
-    "</div>" +
-    "<div id=\"hist-box\"></div>" +
-    "<div id=\"fedit\" class=\"iform\">" +
-      "<div class=\"fg\"><label>Código / Arete</label><input id=\"ecod\" value=\"" + x.c + "\"></div>" +
-      "<div class=\"fg\"><label>Raza</label><select id=\"eraz\">" + razaOpts + "</select></div>" +
-      "<div class=\"fg\"><label>Sexo</label><select id=\"esex\"><option" + (x.s === "Hembra" ? " selected" : "") + ">Hembra</option><option" + (x.s === "Macho" ? " selected" : "") + ">Macho</option></select></div>" +
-      "<div class=\"fg\"><label>Peso (kg)</label><input id=\"epes\" type=\"number\" value=\"" + x.p + "\"></div>" +
-      "<div class=\"fg\"><label>Estado</label><select id=\"eest\"><option" + (x.e === "Sano" ? " selected" : "") + ">Sano</option><option" + (x.e === "Por revisar" ? " selected" : "") + ">Por revisar</option></select></div>" +
-      "<button type=\"button\" class=\"btn\" id=\"btn-save-edit\">Guardar cambios</button>" +
-      "<button type=\"button\" class=\"btn-del\" id=\"btn-del-cow\">🗑️ Eliminar bovino</button>" +
-    "</div>";
-
-  var camInp = document.getElementById("f-cam-inp");
-  if (camInp) {
-    camInp.addEventListener("change", function (ev) {
-      readFileImg(ev, function (img) {
-        db[i].img = img;
-        save();
-        openCow(i);
-      });
-    });
-  }
-
-  var saveEditBtn = document.getElementById("btn-save-edit");
-  if (saveEditBtn) {
-    saveEditBtn.addEventListener("click", function () {
-      var cVal = document.getElementById("ecod");
-      var c = cVal ? cVal.value.trim().toUpperCase() : "";
-      if (!c) return;
-      var rVal = document.getElementById("eraz");
-      var sVal = document.getElementById("esex");
-      var pVal = document.getElementById("epes");
-      var eVal = document.getElementById("eest");
-      db[i].c = c;
-      if (rVal) db[i].r = rVal.value;
-      if (sVal) db[i].s = sVal.value;
-      if (pVal && Number(pVal.value)) db[i].p = Number(pVal.value);
-      if (eVal) db[i].e = eVal.value;
-      save();
-      openCow(i);
-    });
-  }
-
-  var delBtn = document.getElementById("btn-del-cow");
-  if (delBtn) {
-    delBtn.addEventListener("click", function () {
-      if (!confirm("¿Eliminar registro?")) return;
-      db.splice(i, 1);
-      save();
-      go("inicio");
-    });
-  }
-
-  [["ptab-san", "san"], ["ptab-rep", "rep"], ["ptab-pes", "pes"]].forEach(function (pair) {
-    var bEl = document.getElementById(pair[0]);
-    if (bEl) {
-      bEl.addEventListener("click", function () {
-        ftab = pair[1];
-        document.querySelectorAll(".ptab").forEach(function (b) { b.classList.remove("active"); });
-        bEl.classList.add("active");
-        renderHistTable(i);
-      });
+      renderBusqueda();
     }
-  });
 
-  renderHistTable(i);
-  go("ficha");
-}
+    function renderBusqueda() {
+      const q = document.getElementById("input-busqueda").value.trim().toLowerCase();
+      const bloque = document.getElementById("bloque-busqueda");
+      const res = document.getElementById("resultado-busqueda");
 
-function submitSearchEnter() {
-  var qEl = document.getElementById("q");
-  var raw = (qEl ? qEl.value : "").trim().toLowerCase();
-  if (!raw) return;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].c.toLowerCase() === raw) {
-      openCow(i);
-      return;
-    }
-  }
-  var matches = [];
-  for (var j = 0; j < db.length; j++) {
-    if (db[j].c.toLowerCase().indexOf(raw) !== -1 || db[j].r.toLowerCase().indexOf(raw) !== -1) {
-      matches.push(j);
-    }
-  }
-  if (matches.length === 1) openCow(matches[0]);
-}
+      if (!q) {
+        bloque.style.display = "none";
+        return;
+      }
 
-function setText(id, val) {
-  var el = document.getElementById(id);
-  if (el) el.textContent = val;
-}
+      bloque.style.display = "block";
+      const bovs = db.bovinos.filter((b) => b.codigo.toLowerCase().includes(q) || b.raza.toLowerCase().includes(q));
+      const sans = db.sanidad.filter((s) => s.codigo.toLowerCase().includes(q));
+      const reps = db.reproduccion.filter((r) => r.codigo.toLowerCase().includes(q));
+      const pess = db.pesos.filter((p) => p.codigo.toLowerCase().includes(q));
 
-function render() {
-  setText("fname", farm);
-  var tot = db.length;
-  var san = db.filter(function (x) { return x.e === "Sano"; }).length;
-  var rev = db.filter(function (x) { return x.e === "Por revisar"; }).length;
-  var sumP = db.reduce(function (acc, b) { return acc + Number(b.p || 0); }, 0);
-  var prom = tot ? Math.round(sumP / tot) : 0;
+      if (!bovs.length && !sans.length && !reps.length && !pess.length) {
+        res.innerHTML = `<p class="vacio">No se encontraron registros para "${q}".</p>`;
+        return;
+      }
 
-  setText("s-tot", String(tot));
-  setText("s-san", String(san));
-  setText("s-rev", String(rev));
-  setText("s-pes", prom + " kg");
-
-  var qEl = document.getElementById("q");
-  var q = (qEl ? qEl.value : "").toLowerCase().trim();
-  var filtered = [];
-  for (var idx = 0; idx < db.length; idx++) {
-    var x = db[idx];
-    var okText = !q || x.c.toLowerCase().indexOf(q) !== -1 || x.r.toLowerCase().indexOf(q) !== -1 || x.e.toLowerCase().indexOf(q) !== -1;
-    var okSt = (statusFilter === "all" || x.e === statusFilter);
-    if (okText && okSt) filtered.push({ x: x, idx: idx });
-  }
-
-  var l1 = document.getElementById("list1");
-  if (l1) {
-    if (filtered.length) {
-      l1.innerHTML = filtered.map(function (item) {
-        var itemX = item.x;
-        var itemIdx = item.idx;
-        var isRev = itemX.e === "Por revisar";
-        var avHtml = itemX.img ? ("<img src=\"" + itemX.img + "\" alt=\"" + itemX.c + "\">") : "🐄";
-        return "<div class=\"card\" data-open=\"" + itemIdx + "\">" +
-          "<div class=\"ch\"><div class=\"av\">" + avHtml + "</div>" +
-          "<div class=\"cinfo\"><div class=\"crow-top\"><div><div class=\"lbl-sm\">Identificación</div><div class=\"code-big\">" + itemX.c + "</div></div><span class=\"badge-bov\">BOVINO</span></div>" +
-          "<div class=\"meta-line\">" + itemX.r + " · " + itemX.s + " · " + itemX.p + " kg</div>" +
-          "<div class=\"kv-row\"><span>Raza: " + itemX.r + "</span><b>" + itemX.p + " kg</b></div>" +
-          "<div class=\"kv-row\"><span>Sexo: " + itemX.s + "</span></div></div></div>" +
-          "<div class=\"hstrip\"><div class=\"hstrip-top " + (isRev ? "warn" : "") + "\"><span>" + (isRev ? "⚠️" : "✓") + "</span><span>" + itemX.px + "</span></div>" +
-          "<div class=\"hstrip-bot\"><span>🩺</span><span>" + itemX.vet + "</span></div></div>" +
-          "<div class=\"rec-foot\"><span>🕒 Recientes controles</span><span style=\"color:var(--v);font-weight:700\">Ver ficha →</span></div></div>";
-      }).join("");
-    } else {
-      l1.innerHTML = "<div class=\"box\" style=\"text-align:center;color:var(--g)\">Sin resultados.</div>";
-    }
-    l1.querySelectorAll("[data-open]").forEach(function (card) {
-      card.addEventListener("click", function () {
-        openCow(Number(card.getAttribute("data-open")));
+      let html = "";
+      bovs.forEach((b) => {
+        html += `
+          <div class="fila-registro">
+            <div>
+              <div class="fila-titulo">Bovino ${b.codigo} · ${b.raza} (${b.sexo})</div>
+              <div class="fila-detalle">Nac.: ${b.nacimiento} · Edad: ${calcularEdad(b.nacimiento)} · Peso: ${ultimoPesoDe(b.codigo)}</div>
+            </div>
+            <span class="chip">${b.estado}</span>
+          </div>`;
       });
-    });
-  }
-
-  var l2 = document.getElementById("list2");
-  if (l2) {
-    l2.innerHTML = filtered.map(function (item) {
-      var itemX = item.x;
-      var itemIdx = item.idx;
-      var avHtml = itemX.img ? ("<img src=\"" + itemX.img + "\" alt=\"" + itemX.c + "\">") : "🐄";
-      return "<div class=\"card\" data-open2=\"" + itemIdx + "\"><div class=\"ch\" style=\"align-items:center\">" +
-        "<div class=\"av av-sm\">" + avHtml + "</div>" +
-        "<div class=\"cinfo\"><div class=\"crow-top\"><b>" + itemX.c + "</b><span class=\"pill " + (itemX.e === "Por revisar" ? "rev" : "") + "\">" + itemX.e + "</span></div>" +
-        "<div class=\"meta-line\" style=\"font-size:11.5px;font-weight:500\">" + itemX.r + " · " + itemX.s + " · " + itemX.p + " kg</div></div></div></div>";
-    }).join("");
-    l2.querySelectorAll("[data-open2]").forEach(function (card) {
-      card.addEventListener("click", function () {
-        openCow(Number(card.getAttribute("data-open2")));
+      sans.forEach((s) => {
+        html += `
+          <div class="fila-registro">
+            <div>
+              <div class="fila-titulo">Sanidad (${s.codigo}): ${s.tipo} — ${s.detalle}</div>
+              <div class="fila-detalle">Fecha: ${s.fecha}</div>
+            </div>
+            <span class="chip">Sanidad</span>
+          </div>`;
       });
-    });
-  }
-
-  var stb = document.getElementById("san-tb");
-  if (stb) {
-    var srows = "";
-    db.forEach(function (cow) {
-      cow.san.forEach(function (m) {
-        srows += "<tr><td><b>" + cow.c + "</b></td><td>" + m.t + "</td><td>" + (m.p || "—") + "</td></tr>";
+      reps.forEach((r) => {
+        html += `
+          <div class="fila-registro">
+            <div>
+              <div class="fila-titulo">Reproducción (${r.codigo}): ${r.tipo}</div>
+              <div class="fila-detalle">Fecha: ${r.fecha}${r.obs ? ` · ${r.obs}` : ""}</div>
+            </div>
+            <span class="chip">Productivo</span>
+          </div>`;
       });
-    });
-    stb.innerHTML = srows || "<tr><td colspan=\"3\">Sin controles</td></tr>";
-  }
+      pess.forEach((p) => {
+        html += `
+          <div class="fila-registro">
+            <div>
+              <div class="fila-titulo">Peso (${p.codigo}): ${p.peso} kg</div>
+              <div class="fila-detalle">Fecha: ${p.fecha}</div>
+            </div>
+            <span class="chip">Peso</span>
+          </div>`;
+      });
 
-  var rb = document.getElementById("rep-box");
-  if (rb) {
-    rb.innerHTML =
-      "<p style=\"margin-bottom:8px\"><b>Hacienda:</b> " + farm + "</p>" +
-      "<p style=\"margin-bottom:8px\"><b>Total bovinos:</b> " + tot + " (" + san + " sanos / " + rev + " por revisar)</p>" +
-      "<p><b>Peso promedio:</b> " + prom + " kg</p>";
-  }
-}
-
-function csv() {
-  var lines = ["Arete;Raza;Sexo;Peso_kg;Estado;Proximo_Control"];
-  db.forEach(function (x) {
-    lines.push("\"" + x.c + "\";\"" + x.r + "\";\"" + x.s + "\";" + x.p + ";\"" + x.e + "\";\"" + x.px + "\"");
-  });
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" }));
-  a.download = "bovisense_hato.csv";
-  a.click();
-}
-
-function onClickId(id, fn) {
-  var el = document.getElementById(id);
-  if (el) el.addEventListener("click", fn);
-}
-
-onClickId("btn-toggle-search", function () {
-  go("inicio");
-  setTimeout(function () {
-    var qEl = document.getElementById("q");
-    if (qEl) qEl.focus();
-  }, 120);
-});
-onClickId("btn-farm-top", editFarm);
-onClickId("btn-farm-lbl", editFarm);
-
-var qInput = document.getElementById("q");
-if (qInput) {
-  qInput.addEventListener("input", render);
-  qInput.addEventListener("keydown", function (ev) {
-    if (ev.key === "Enter") {
-      ev.preventDefault();
-      submitSearchEnter();
+      res.innerHTML = html;
     }
-  });
-}
 
-onClickId("kpi-all", function () { setFilter("all"); });
-onClickId("kpi-Sano", function () { setFilter("Sano"); });
-onClickId("kpi-Por-revisar", function () { setFilter("Por revisar"); });
-onClickId("kpi-pes", function () { go("reportes"); });
-onClickId("btn-clear-filter", function () { setFilter("all"); });
-onClickId("link-inv", function () { go("bovinos"); });
-onClickId("link-all-inv", function () { setFilter("all"); });
-onClickId("btn-back", function () { go("inicio"); });
-onClickId("act-edit", function () {
-  var fe = document.getElementById("fedit");
-  if (fe) fe.classList.toggle("open");
-});
+    document.getElementById("input-busqueda").addEventListener("input", renderBusqueda);
+    document.getElementById("btn-limpiar-busqueda").addEventListener("click", () => {
+      document.getElementById("input-busqueda").value = "";
+      renderBusqueda();
+    });
+    document.getElementById("btn-cerrar-busqueda").addEventListener("click", () => {
+      document.getElementById("input-busqueda").value = "";
+      renderBusqueda();
+    });
 
-var nimgEl = document.getElementById("nimg");
-if (nimgEl) {
-  nimgEl.addEventListener("change", function (ev) {
-    readFileImg(ev, function (img) { tmpImg = img; });
-  });
-}
-
-onClickId("btn-save-cow", addCow);
-onClickId("btn-csv", csv);
-onClickId("btn-print", function () { window.print(); });
-
-document.querySelectorAll("[data-nav]").forEach(function (el) {
-  el.addEventListener("click", function () {
-    var v = el.getAttribute("data-nav");
-    if (v) go(v);
-  });
-});
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("sw.js").catch(function () {});
-  });
-}
-
-render();
-</script>
+    sincronizarAccesoUI();
+    renderTodo();
+  </script>
+</body>
+</html>
